@@ -43,11 +43,17 @@
     "react-hooks/exhaustive-deps": "warn",
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
-    "react/function-component-definition": "off"
+    "react/function-component-definition": "off",
+    "react/state-in-constructor": "off",
+    "no-console": ["warn", { "allow": ["error", "warn"] }]
   },
   "settings": {
     "import/resolver": {
-      "typescript": {}
+      "typescript": {},
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
     }
   }
 }
