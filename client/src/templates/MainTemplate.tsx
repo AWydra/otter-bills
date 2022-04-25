@@ -1,7 +1,10 @@
 import React, { ReactElement, ReactNode } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
 import ThemeProvider from 'theme/ThemeProvider';
+import GlobalStyles from 'theme/GlobalStyles';
 import Navbar from 'components/organisms/Navbar/Navbar';
+import BottomNavigation from 'components/organisms/BottomNavigation/BottomNavigation';
 import ErrorBoundary from './ErrorBoundary';
 
 interface Props {
@@ -13,8 +16,10 @@ const MainTemplate = ({ children }: Props): ReactElement => {
     <ErrorBoundary>
       <ThemeProvider>
         <CssBaseline />
+        <GlobalStyles />
         <Navbar />
-        {children}
+        <Box mb={8}>{children}</Box>
+        <BottomNavigation />
       </ThemeProvider>
     </ErrorBoundary>
   );
