@@ -1,11 +1,15 @@
 import React, { ReactElement } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import MainTemplate from 'templates/MainTemplate';
+import MainRoutes from 'routes/MainRoutes';
 
 const App = (): ReactElement => {
   return (
-    <MainTemplate>
-      <div>routing tbc</div>
-    </MainTemplate>
+    <BrowserRouter>
+      <MainTemplate>
+        <MainRoutes />
+      </MainTemplate>
+    </BrowserRouter>
   );
 };
 

@@ -7,9 +7,9 @@ import Navbar from 'components/organisms/Navbar/Navbar';
 import BottomNavigation from 'components/organisms/BottomNavigation/BottomNavigation';
 import ErrorBoundary from './ErrorBoundary';
 
-interface Props {
+type Props = {
   children: ReactNode;
-}
+};
 
 const MainTemplate = ({ children }: Props): ReactElement => {
   return (

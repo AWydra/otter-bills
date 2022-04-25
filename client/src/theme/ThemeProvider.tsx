@@ -7,9 +7,9 @@ import {
 } from '@mui/material/styles';
 import theme from './theme';
 
-interface Props {
+type Props = {
   children: ReactNode;
-}
+};
 
 const ThemeProvider = ({ children }: Props): ReactElement => {
   const mainTheme: Theme = responsiveFontSizes(createTheme(theme));
