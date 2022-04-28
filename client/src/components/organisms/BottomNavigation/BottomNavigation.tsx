@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import MuiBottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import HomeIcon from '@mui/icons-material/Home';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { Paper } from '@mui/material';
 
@@ -16,7 +18,7 @@ const BottomNavigation = (): React.ReactElement => {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction label="Page 1" icon={<FavoriteIcon />} />
+        <BottomNavigationAction component={Link} to="/" label="Start" icon={<HomeIcon />} />
         <BottomNavigationAction label="Page 2" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="Page 3" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="Page 4" icon={<FavoriteIcon />} />

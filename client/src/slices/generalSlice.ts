@@ -1,13 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ThemeModeEnum } from 'enums';
 
-enum ThemeModeEnum {
-  LIGHT = 'light',
-  DARK = 'dark',
-}
-
-type GeneralState = {
+interface GeneralState {
   mode: ThemeModeEnum;
-};
+}
 
 const initialState: GeneralState = {
   mode: ThemeModeEnum.LIGHT,

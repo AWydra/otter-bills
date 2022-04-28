@@ -7,9 +7,9 @@ import Navbar from 'components/organisms/Navbar/Navbar';
 import BottomNavigation from 'components/organisms/BottomNavigation/BottomNavigation';
 import ErrorBoundary from './ErrorBoundary';
 
-type Props = {
+interface Props {
   children: ReactNode;
-};
+}
 
 const MainTemplate = ({ children }: Props): ReactElement => {
   return (
@@ -18,7 +18,9 @@ const MainTemplate = ({ children }: Props): ReactElement => {
         <CssBaseline />
         <GlobalStyles />
         <Navbar />
-        <Box mb={8}>{children}</Box>
+        <Box mt={2} mb={8} mx={1}>
+          {children}
+        </Box>
         <BottomNavigation />
       </ThemeProvider>
     </ErrorBoundary>

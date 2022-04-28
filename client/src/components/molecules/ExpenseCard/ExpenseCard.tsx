@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import { Typography, Paper } from '@mui/material';
 
-type Props = {
+interface Props {
   label: string;
   color: string;
   amount: string;
-};
+}
 
 const ExpenseCard = ({ label, color, amount }: Props): ReactElement => {
   return (
