@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, Fragment } from 'react';
 import { Box, Divider, List } from '@mui/material';
 import HistoryListItem from 'components/molecules/HistoryListItem/HistoryListItem';
 import { HistoryResponseInterface } from 'interfaces';
@@ -51,9 +51,8 @@ const HistoryList = (): ReactElement => {
     <Box>
       <List sx={styles.list} dense>
         {data.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
-          <>
+          <Fragment key={id}>
             <HistoryListItem
-              key={id}
               label={label}
               amount={amount}
               paidBy={paidBy}
@@ -61,7 +60,7 @@ const HistoryList = (): ReactElement => {
               refund={refund}
             />
             {i < data.length - 1 && <Divider component="li" />}
-          </>
+          </Fragment>
         ))}
       </List>
     </Box>

@@ -36,6 +36,7 @@ const HistoryListItem = ({ label, amount, paidBy, avatars = [], refund }: Props)
             )}
           </Box>
         }
+        secondaryTypographyProps={{ component: 'div' }}
       />
     </ListItem>
   );
