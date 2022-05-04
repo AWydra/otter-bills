@@ -1,4 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import plLocale from 'date-fns/locale/pl';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import ThemeProvider from 'theme/ThemeProvider';
@@ -14,15 +17,17 @@ interface Props {
 const MainTemplate = ({ children }: Props): ReactElement => {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <CssBaseline />
-        <GlobalStyles />
-        <Navbar />
-        <Box mt={2} mb={8} mx={1}>
-          {children}
-        </Box>
-        <BottomNavigation />
-      </ThemeProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns} locale={plLocale}>
+        <ThemeProvider>
+          <CssBaseline />
+          <GlobalStyles />
+          <Navbar />
+          <Box height="calc(100vh - 56px)" pb={7}>
+            {children}
+          </Box>
+          <BottomNavigation />
+        </ThemeProvider>
+      </LocalizationProvider>
     </ErrorBoundary>
   );
 };

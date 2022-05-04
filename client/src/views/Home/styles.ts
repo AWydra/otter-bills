@@ -4,6 +4,8 @@ const styles: { [key: string]: SxProps } = {
   container: {
     display: 'flex',
     flexDirection: 'column',
+    mt: 2,
+    mx: 1,
   },
   cardContainer: {
     display: 'grid',
