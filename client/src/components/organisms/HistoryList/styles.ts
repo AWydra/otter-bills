@@ -1,6 +1,6 @@
-import { SxProps } from '@mui/material';
+import { StyleInterface } from 'interfaces';
 
-const styles: { [key: string]: SxProps } = {
+const styles: StyleInterface = {
   list: { width: '100%', bgcolor: 'background.paper' },
 };
 

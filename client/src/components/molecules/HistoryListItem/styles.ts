@@ -1,6 +1,6 @@
-import { SxProps } from '@mui/material';
+import { StyleInterface } from 'interfaces';
 
-const styles: { [key: string]: SxProps } = {
+const styles: StyleInterface = {
   listItem: { px: 1, alignItems: 'flex-start' },
   listItem_primary: { display: 'flex', justifyContent: 'space-between' },
   listItem_secondary: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
