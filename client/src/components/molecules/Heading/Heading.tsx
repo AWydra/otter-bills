@@ -14,7 +14,7 @@ interface Props {
 const Heading = ({ title, subtitle = '', sx = {} }: Props): ReactElement => (
   <Box sx={spreadSx(styles.heading, sx)}>
     <Title>{title}</Title>
-    <Subtitle sx={styles.subtitle}>{subtitle}</Subtitle>
+    {subtitle && <Subtitle sx={styles.subtitle}>{subtitle}</Subtitle>}
   </Box>
 );
 
