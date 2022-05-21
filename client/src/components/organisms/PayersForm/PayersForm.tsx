@@ -1,5 +1,9 @@
 import React, { ReactElement } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from 'hooks';
+import { setPayers } from 'slices/billSlice';
 import {
+  Box,
   Button,
   List,
   ListItem,
@@ -10,14 +14,10 @@ import {
   Avatar,
   Paper,
 } from '@mui/material';
+import { PayersInterface } from 'interfaces';
+import { RouteEnum } from 'enums';
 
-type DataType = {
-  id: number;
-  name: string;
-  avatar: string;
-};
-
-const data: DataType[] = [
+const data: PayersInterface[] = [
   {
     id: 1,
     name: 'Kyle Hicks',
@@ -86,20 +86,28 @@ const data: DataType[] = [
 ];
 
 const PayersForm = (): ReactElement => {
-  const [checked, setChecked] = React.useState<DataType[]>([]);
+  const { payers } = useAppSelector((state) => state.bill);
+  const [checked, setChecked] = React.useState<PayersInterface[]>(payers);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleToggle = (payer: DataType) => {
-    const isInArray = checked.some((el: DataType) => el.id === payer.id);
+  const handleToggle = (payer: PayersInterface) => {
+    const isInArray = checked.some((el: PayersInterface) => el.id === payer.id);
 
     if (isInArray) {
       setChecked((prevState) => prevState.filter((el) => el.id !== payer.id));
     } else {
-      setChecked((prevState) => [...prevState, payer].sort((a, b) => b.id - a.id));
+      setChecked((prevState) => [...prevState, payer].sort((a, b) => a.id - b.id));
     }
   };
 
+  const handlePayers = () => {
+    dispatch(setPayers(checked));
+    navigate(`${RouteEnum.ADD_RECEIPT}/3`);
+  };
+
   return (
-    <>
+    <Box sx={{ width: '100%', px: 2, display: 'flex', flexDirection: 'column' }}>
       <List
         dense
         sx={{ width: '100%', bgcolor: 'background.paper', maxHeight: '50vh', overflowY: 'scroll' }}
@@ -131,10 +139,10 @@ const PayersForm = (): ReactElement => {
           );
         })}
       </List>
-      <Button disabled={!checked.length} sx={{ mt: 3 }} variant="contained">
+      <Button sx={{ mt: 3 }} onClick={handlePayers} disabled={!checked.length} variant="contained">
         Dalej
       </Button>
-    </>
+    </Box>
   );
 };
 

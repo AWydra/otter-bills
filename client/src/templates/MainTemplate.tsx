@@ -22,7 +22,7 @@ const MainTemplate = ({ children }: Props): ReactElement => {
           <CssBaseline />
           <GlobalStyles />
           <Navbar />
-          <Box height="calc(100vh - 56px)" pb={7}>
+          <Box minHeight="calc(100vh - 56px)" display="flex" flexDirection="column" pb={7}>
             {children}
           </Box>
           <BottomNavigation />

@@ -1,13 +1,25 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import MuiBottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import React, { ReactElement, useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  BottomNavigation as MuiBottomNavigation,
+  BottomNavigationAction,
+  Paper,
+} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { Paper } from '@mui/material';
+import { RouteEnum } from 'enums';
 
-const BottomNavigation = (): React.ReactElement => {
-  const [value, setValue] = React.useState(0);
+const BottomNavigation = (): ReactElement => {
+  const location = useLocation();
+  const [value, setValue] = useState<string>(location.pathname);
+
+  useEffect(() => {
+    const newValue = location.pathname.includes(RouteEnum.ADD_RECEIPT)
+      ? RouteEnum.ADD_RECEIPT
+      : location.pathname;
+    setValue(newValue);
+  }, [location.pathname]);
 
   return (
     <Paper elevation={3} sx={{ width: '100%', position: 'fixed', bottom: 0 }}>
@@ -18,8 +30,20 @@ const BottomNavigation = (): React.ReactElement => {
           setValue(newValue);
         }}
       >
-        <BottomNavigationAction component={Link} to="/" label="Start" icon={<HomeIcon />} />
-        <BottomNavigationAction label="Page 2" icon={<FavoriteIcon />} />
+        <BottomNavigationAction
+          component={Link}
+          to={RouteEnum.HOME}
+          value={RouteEnum.HOME}
+          label="Start"
+          icon={<HomeIcon />}
+        />
+        <BottomNavigationAction
+          component={Link}
+          to={`${RouteEnum.ADD_RECEIPT}/1`}
+          value={RouteEnum.ADD_RECEIPT}
+          label="Dodaj"
+          icon={<AddIcon />}
+        />
         <BottomNavigationAction label="Page 3" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="Page 4" icon={<FavoriteIcon />} />
       </MuiBottomNavigation>
