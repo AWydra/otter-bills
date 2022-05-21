@@ -3,12 +3,7 @@
 import React, { ReactElement } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
-
-interface ShopOptionIterface {
-  inputValue?: string;
-  name: string;
-  id?: number;
-}
+import { ShopOptionIterface } from 'interfaces';
 
 interface Props {
   value: ShopOptionIterface | null;

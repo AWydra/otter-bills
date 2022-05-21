@@ -1,21 +1,20 @@
 import React, { ReactElement } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from 'hooks/redux';
+import { setShop, setAmount, setDate } from 'slices/billSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { Box, Button, TextField, InputAdornment, Stack } from '@mui/material';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import ShopSelect from 'components/molecules/ShopSelect/ShopSelect';
-
-interface ShopOptionIterface {
-  inputValue?: string;
-  name: string;
-  id?: number;
-}
+import { ShopOptionIterface } from 'interfaces';
+import { RouteEnum } from 'enums';
 
 interface FormValueInterface {
-  shop: ShopOptionIterface | null;
+  shop: ShopOptionIterface;
   amount: string;
-  date: Date | number | null;
+  date: Date | number | string;
 }
 
 const schema = yup.object().shape({
@@ -34,6 +33,8 @@ const schema = yup.object().shape({
 });
 
 const BillForm = (): ReactElement => {
+  const { shop, amount, date } = useAppSelector((state) => state.bill);
+  const dispatch = useAppDispatch();
   const {
     control,
     handleSubmit,
@@ -43,9 +44,14 @@ const BillForm = (): ReactElement => {
   } = useForm<FormValueInterface>({
     resolver: yupResolver(schema),
   });
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<FormValueInterface> = (data) =>
-    console.log('data submitted: ', data);
+  const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
+    dispatch(setShop(data.shop));
+    dispatch(setAmount(data.amount));
+    dispatch(setDate(data.date.toString()));
+    navigate(`${RouteEnum.ADD_RECEIPT}/2`);
+  };
 
   return (
     <Box
@@ -61,7 +67,8 @@ const BillForm = (): ReactElement => {
           name="shop"
           control={control}
           defaultValue={{
-            name: '',
+            name: shop.name,
+            id: shop.id,
           }}
           render={({ field }) => (
             <ShopSelect
@@ -69,7 +76,6 @@ const BillForm = (): ReactElement => {
               onChange={setValue}
               inputProps={{
                 error: !!errors.shop,
-                // @ts-expect-error Wrong react-hook-form typing
                 helperText: errors.shop?.name?.message ? errors.shop.name.message : '',
               }}
             />
@@ -78,7 +84,7 @@ const BillForm = (): ReactElement => {
         <Controller
           name="amount"
           control={control}
-          defaultValue=""
+          defaultValue={amount}
           render={({ field }) => (
             <TextField
               {...field}
@@ -105,7 +111,7 @@ const BillForm = (): ReactElement => {
         <Controller
           name="date"
           control={control}
-          defaultValue={new Date()}
+          defaultValue={date}
           render={({ field }) => (
             <MobileDatePicker
               {...field}
@@ -113,6 +119,7 @@ const BillForm = (): ReactElement => {
               okText="Zatwierdź"
               cancelText="Anuluj"
               onChange={(newValue) => {
+                if (!newValue) return;
                 setValue('date', newValue, {
                   shouldValidate: true,
                 });
@@ -146,7 +153,7 @@ const BillForm = (): ReactElement => {
           )}
         />
         <Button sx={{ mt: 3 }} type="submit" variant="contained">
-          Wyślij
+          Dalej
         </Button>
       </Stack>
     </Box>

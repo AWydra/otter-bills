@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import generalReducer from 'slices/generalSlice';
+import billReducer from 'slices/billSlice';
 
 const store = configureStore({
   reducer: {
     general: generalReducer,
+    bill: billReducer,
   },
 });
 
