@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { Typography, SxProps, Theme } from '@mui/material';
-import { spreadSx } from 'utils/spreadSx';
+import { spreadSx } from 'utils';
 import styles from './styles';
 
 interface Props {

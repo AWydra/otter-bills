@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react';
 import { Box, SxProps, Theme } from '@mui/material';
 import Title from 'components/atoms/Title/Title';
 import Subtitle from 'components/atoms/Subtitle/Subtitle';
-import { spreadSx } from 'utils/spreadSx';
+import { spreadSx } from 'utils';
 import styles from './styles';
 
 interface Props {
