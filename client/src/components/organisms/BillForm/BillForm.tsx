@@ -10,6 +10,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import ShopSelect from 'components/molecules/ShopSelect/ShopSelect';
 import { ShopOptionIterface } from 'interfaces';
 import { RouteEnum } from 'enums';
+import { formatAmount } from 'utils';
 
 interface FormValueInterface {
   shop: ShopOptionIterface;
@@ -48,7 +49,7 @@ const BillForm = (): ReactElement => {
 
   const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
     dispatch(setShop(data.shop));
-    dispatch(setAmount(data.amount));
+    dispatch(setAmount(formatAmount(data.amount)));
     dispatch(setDate(data.date.toString()));
     navigate(`${RouteEnum.ADD_RECEIPT}/2`);
   };
