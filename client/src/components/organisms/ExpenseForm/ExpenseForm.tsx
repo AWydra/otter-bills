@@ -6,6 +6,7 @@ import { useAppSelector } from 'hooks';
 import { PayersInterface } from 'interfaces';
 import { Box, Button, List, Stack } from '@mui/material';
 import ExpenseItem from 'components/molecules/ExpenseItem/ExpenseItem';
+import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
 
 interface PayerAmountInterface extends PayersInterface {
   amount: string;
@@ -36,11 +37,7 @@ const ExpenseForm = (): ReactElement => {
     error: false,
   }));
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValueInterface>({
+  const { control, handleSubmit } = useForm<FormValueInterface>({
     resolver: yupResolver(schema),
     defaultValues: {
       amounts: payers,
@@ -70,6 +67,10 @@ const ExpenseForm = (): ReactElement => {
   };
 
   const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
+    const hasError = data.amounts.some((el) => el.error);
+
+    if (hasError) return;
+
     console.log('data', data);
   };
 
@@ -83,6 +84,7 @@ const ExpenseForm = (): ReactElement => {
       flex={1}
       flexDirection="column"
     >
+      <ReceiptSummary />
       <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {fields.map((payer, index) => {
           return (
@@ -108,37 +110,11 @@ const ExpenseForm = (): ReactElement => {
                     value={field.value}
                     error={fields[index].error}
                   />
-                  // <ShopSelect
-                  //   {...field}
-                  //   onChange={setValue}
-                  //   inputProps={{
-                  //     error: !!errors.shop,
-                  //     helperText: errors.shop?.name?.message ? errors.shop.name.message : '',
-                  //   }}
-                  // />
                 );
               }}
             />
           );
         })}
-        {/* {payers.map((payer) => (
-          <Controller
-            name="test"
-            control={control}
-            defaultValue="dIPA"
-            render={({ field }) => (
-              <ExpenseItem {...field} key={payer.id} name={payer.name} avatarUrl={payer.avatar} />
-              // <ShopSelect
-              //   {...field}
-              //   onChange={setValue}
-              //   inputProps={{
-              //     error: !!errors.shop,
-              //     helperText: errors.shop?.name?.message ? errors.shop.name.message : '',
-              //   }}
-              // />
-            )}
-          />
-        ))} */}
       </List>
       <Stack sx={{ mt: 'auto', pb: (theme) => theme.spacing(3) }} spacing={2}>
         <Button variant="outlined">Podziel rachunek między osoby</Button>
@@ -149,32 +125,5 @@ const ExpenseForm = (): ReactElement => {
     </Box>
   );
 };
-
-/* 
-Widoczna cała kwota z paragonu
-
-Dynamiczne selecty z wyborem kwoty:
- 
- input do wpisania kwoty, jaka z tego paragonu nie powinna się wliczać do wspólnego rachunku
-
- USE CASE
- Ja i Patrycja zrobiliśmy zakupy za 100zł, zapłaciłem ja
- Ja wydałem 20zł na jedzonko
- Patrycja wydała 8zł na Tymbarki
- Dla Gohy kupiliśmy łopatki za 60zł
-
- Z całkowitej kwoty Goha płaci 60zł, ale nie wlicza się do wspólnego podziału paragonu
- - zostaje 40zł
- ja wydałem 20zł, Patrycja 8zł, oboje wliczamy się do wspólnego podziału
- - 40-20-8=12zł
- Całkowita kwota do podziału to 12zł
- Ja i Patrycja zapłaciliśmy po 6zł
- Patrycja jest mi winna 6zł za wspólne + 8zł za Tymbarki
-
-
- (PK) Patrycja Kubica
- --------------------
-
-*/
 
 export default ExpenseForm;
