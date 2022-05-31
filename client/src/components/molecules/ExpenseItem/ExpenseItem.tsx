@@ -117,6 +117,7 @@ const ExpenseItem = ({
                   inputProps={{
                     'aria-label': 'weight',
                   }}
+                  autoComplete="off"
                 />
               </Box>
             </Box>

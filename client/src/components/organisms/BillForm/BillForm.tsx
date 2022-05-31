@@ -105,6 +105,7 @@ const BillForm = (): ReactElement => {
               }}
               error={!!errors.amount?.message}
               helperText={errors.amount?.message}
+              autoComplete="off"
             />
           )}
         />

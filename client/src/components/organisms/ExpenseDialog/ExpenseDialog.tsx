@@ -40,6 +40,11 @@ const ExpenseDialog = ({ open, onClose, setValue }: Props): ReactElement => {
       const formattedNumber = (Math.round(countFunction() * 100) / 100)
         .toFixed(2)
         .replace('.', ',');
+      if (formattedNumber.length > 8) {
+        setError(true);
+        setDisplayValue('Za duża wartość');
+        return;
+      }
       setDisplayValue(formattedNumber);
       setError(false);
     } catch {
@@ -69,7 +74,14 @@ const ExpenseDialog = ({ open, onClose, setValue }: Props): ReactElement => {
           label="Kwota"
           fullWidth
           variant="filled"
-          onChange={(ev) => setInputValue(ev.target.value)}
+          onChange={(ev) => {
+            const { value } = ev.target;
+            const pattern = /^[0-9,. +\-*/]+$/;
+            if (!pattern.test(value) && value) {
+              return;
+            }
+            setInputValue(value);
+          }}
           multiline
           error={!!error}
           helperText={`${displayValue} ${!inputValue || error ? '' : 'PLN'}`}
