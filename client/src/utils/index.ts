@@ -1,2 +1,2 @@
-export { formatAmount } from './formatAmount';
-export { spreadSx } from './spreadSx';
+export * from './formatAmount';
+export * from './spreadSx';

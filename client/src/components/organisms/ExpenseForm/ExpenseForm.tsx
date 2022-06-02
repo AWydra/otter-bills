@@ -7,46 +7,43 @@ import { PayersInterface } from 'interfaces';
 import { Box, Button, List, Stack } from '@mui/material';
 import ExpenseItem from 'components/molecules/ExpenseItem/ExpenseItem';
 import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
+import { amountToNumber, formatAmount } from 'utils';
 
-interface PayerAmountInterface extends PayersInterface {
-  amount: string;
-  error: boolean;
+interface PayerErrorInterface extends PayersInterface {
+  error?: boolean;
 }
 
 interface FormValueInterface {
-  amounts: PayerAmountInterface[];
+  payers: PayerErrorInterface[];
 }
-
-const schema = yup.object().shape({
-  payers: yup.array().of(
-    yup.object().shape({
-      amount: yup
-        .string()
-        .required('Wymagane')
-        .matches(/^[0-9]{1,}([,.][0-9]{1,2})?$/, 'Wprowadź poprawną kwotę'),
-    }),
-  ),
-});
 
 const ExpenseForm = (): ReactElement => {
   const storePayers = useAppSelector((state) => state.bill.payers);
+  const storeAmount = useAppSelector((state) => state.bill.amount);
 
-  const payers: PayerAmountInterface[] = storePayers.map((payer) => ({
+  const payersList: PayerErrorInterface[] = storePayers.map((payer) => ({
     ...payer,
-    amount: '',
     error: false,
   }));
+
+  const schema = yup.object().shape({
+    payers: yup.array().of(
+      yup.object().shape({
+        amount: yup.string().matches(/^([0-9]{1,}([,.][0-9]{1,2})?)?$/, 'Wprowadź poprawną kwotę'),
+      }),
+    ),
+  });
 
   const { control, handleSubmit } = useForm<FormValueInterface>({
     resolver: yupResolver(schema),
     defaultValues: {
-      amounts: payers,
+      payers: payersList,
     },
   });
 
   const { fields, update } = useFieldArray({
     control,
-    name: 'amounts',
+    name: 'payers',
     keyName: 'key',
   });
 
@@ -66,10 +63,37 @@ const ExpenseForm = (): ReactElement => {
     return true;
   };
 
-  const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
-    const hasError = data.amounts.some((el) => el.error);
+  const checkTotalAmount = (data: FormValueInterface) => {
+    const totalAmount = data.payers
+      .reduce((partialSum, payer) => {
+        const numberAmount = amountToNumber(payer.amount);
+        return partialSum + numberAmount;
+      }, 0)
+      .toFixed(2);
 
-    if (hasError) return;
+    if (amountToNumber(totalAmount) > amountToNumber(storeAmount)) {
+      // TODO Alert
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSplitBill = () => {
+    console.log('Handle split bill');
+  };
+
+  const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
+    const hasError = data.payers.some((el) => el.error);
+    const isTotalAmountValid = checkTotalAmount(data);
+
+    if (hasError || !isTotalAmountValid) return;
+
+    const formatted = data.payers.map((payer) => {
+      delete payer.error;
+      payer.amount = formatAmount(payer.amount);
+      return payer;
+    });
 
     console.log('data', data);
   };
@@ -90,7 +114,7 @@ const ExpenseForm = (): ReactElement => {
           return (
             <Controller
               key={payer.id}
-              name={`amounts.${index}.amount`}
+              name={`payers.${index}.amount`}
               control={control}
               render={({ field }) => {
                 return (
@@ -107,8 +131,8 @@ const ExpenseForm = (): ReactElement => {
                         field.onChange(ev);
                       }
                     }}
-                    value={field.value}
-                    error={fields[index].error}
+                    value={field.value || ''}
+                    error={fields[index].error || false}
                   />
                 );
               }}
@@ -117,7 +141,9 @@ const ExpenseForm = (): ReactElement => {
         })}
       </List>
       <Stack sx={{ mt: 'auto', pb: (theme) => theme.spacing(3) }} spacing={2}>
-        <Button variant="outlined">Podziel rachunek między osoby</Button>
+        <Button onClick={handleSplitBill} variant="outlined">
+          Podziel rachunek między osoby
+        </Button>
         <Button type="submit" variant="contained">
           Wyślij
         </Button>

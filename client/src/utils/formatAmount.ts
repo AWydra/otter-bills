@@ -5,3 +5,5 @@ export const formatAmount = (amount: string) => {
 
   return hasComma ? formatted.replace('.', ',') : formatted;
 };
+
+export const amountToNumber = (amount: string) => Number(amount.replace(',', '.'));
