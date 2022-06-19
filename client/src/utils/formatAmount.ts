@@ -1,4 +1,5 @@
 export const formatAmount = (amount: string) => {
+  if (amount === '') return amount;
   const hasComma = amount.includes(',');
   const number = Number(amount.replace(',', '.'));
   const formatted = number.toFixed(2);

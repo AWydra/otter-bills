@@ -8,6 +8,11 @@ interface BillState {
   payers: PayersInterface[];
 }
 
+interface ReceiptSplitInterface {
+  id: number;
+  splitsReceipt: boolean;
+}
+
 const initialState: BillState = {
   shop: {
     name: '',
@@ -34,9 +39,17 @@ export const billSlice = createSlice({
     setPayers: (state, action: PayloadAction<PayersInterface[]>) => {
       state.payers = action.payload;
     },
+    setReceiptSplit: (state, action: PayloadAction<ReceiptSplitInterface>) => {
+      state.payers = state.payers.map((payer) => {
+        if (payer.id === action.payload.id) {
+          return { ...payer, splitsReceipt: action.payload.splitsReceipt };
+        }
+        return payer;
+      });
+    },
   },
 });
 
-export const { setShop, setAmount, setDate, setPayers } = billSlice.actions;
+export const { setShop, setAmount, setDate, setPayers, setReceiptSplit } = billSlice.actions;
 
 export default billSlice.reducer;

@@ -5,6 +5,7 @@ import Heading from 'components/molecules/Heading/Heading';
 import BillForm from 'components/organisms/BillForm/BillForm';
 import PayersForm from 'components/organisms/PayersForm/PayersForm';
 import ExpenseForm from 'components/organisms/ExpenseForm/ExpenseForm';
+import SplitForm from 'components/organisms/SplitForm/SplitForm';
 import { RouteEnum } from 'enums';
 
 interface StepInterface {
@@ -25,6 +26,11 @@ const steps: StepInterface[] = [
     step: '3',
     title: 'Wpisz kwotę wydaną na każdą osobę',
     component: <ExpenseForm />,
+  },
+  {
+    step: '4',
+    title: 'Podziel kwotę między osoby',
+    component: <SplitForm />,
   },
 ];
 

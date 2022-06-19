@@ -1,10 +1,21 @@
 import React, { ReactElement } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useAppSelector } from 'hooks';
+import { countSplitAmount } from 'utils';
 
-const ReceiptSummary = (): ReactElement => {
+interface Props {
+  split?: boolean;
+}
+
+const ReceiptSummary = ({ split = false }: Props): ReactElement => {
   const shop = useAppSelector((state) => state.bill.shop);
   const amount = useAppSelector((state) => state.bill.amount);
+  const payers = useAppSelector((state) => state.bill.payers);
+  let amountToShow = amount;
+
+  if (split) {
+    amountToShow = countSplitAmount(amount, payers);
+  }
 
   return (
     <Box
@@ -31,8 +42,8 @@ const ReceiptSummary = (): ReactElement => {
           flexBasis: '50%',
         }}
       >
-        <Typography color="text.secondary">Wydałeś:</Typography>
-        <Typography variant="h6">{amount} PLN</Typography>
+        <Typography color="text.secondary">{split ? 'Do podziału' : 'Wydałeś'}:</Typography>
+        <Typography variant="h6">{amountToShow} PLN</Typography>
       </Box>
     </Box>
   );

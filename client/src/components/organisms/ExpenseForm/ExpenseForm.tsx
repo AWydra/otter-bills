@@ -2,12 +2,15 @@ import React, { ReactElement } from 'react';
 import { useForm, useFieldArray, SubmitHandler, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { PayersInterface } from 'interfaces';
-import { Box, Button, List, Stack } from '@mui/material';
+import { Box, Button, List, Stack, Typography } from '@mui/material';
 import ExpenseItem from 'components/molecules/ExpenseItem/ExpenseItem';
 import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
 import { amountToNumber, formatAmount } from 'utils';
+import { setPayers } from 'slices/billSlice';
+import { useNavigate } from 'react-router-dom';
+import { RouteEnum } from 'enums';
 
 interface PayerErrorInterface extends PayersInterface {
   error?: boolean;
@@ -20,6 +23,8 @@ interface FormValueInterface {
 const ExpenseForm = (): ReactElement => {
   const storePayers = useAppSelector((state) => state.bill.payers);
   const storeAmount = useAppSelector((state) => state.bill.amount);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const payersList: PayerErrorInterface[] = storePayers.map((payer) => ({
     ...payer,
@@ -47,6 +52,13 @@ const ExpenseForm = (): ReactElement => {
     keyName: 'key',
   });
 
+  const formatData = (payers: PayerErrorInterface[]): PayersInterface[] =>
+    payers.map((payer) => {
+      delete payer.error;
+      payer.amount = formatAmount(payer.amount);
+      return payer;
+    });
+
   const checkValidity = (value: string, index: number): boolean => {
     if (value) {
       if (value.length > 8) return false;
@@ -63,13 +75,17 @@ const ExpenseForm = (): ReactElement => {
     return true;
   };
 
-  const checkTotalAmount = (data: FormValueInterface) => {
-    const totalAmount = data.payers
+  const countTotalAmount = (payers: PayerErrorInterface[]) => {
+    return payers
       .reduce((partialSum, payer) => {
         const numberAmount = amountToNumber(payer.amount);
         return partialSum + numberAmount;
       }, 0)
       .toFixed(2);
+  };
+
+  const checkTotalAmount = (payers: PayerErrorInterface[]) => {
+    const totalAmount = countTotalAmount(payers);
 
     if (amountToNumber(totalAmount) > amountToNumber(storeAmount)) {
       // TODO Alert
@@ -80,22 +96,24 @@ const ExpenseForm = (): ReactElement => {
   };
 
   const handleSplitBill = () => {
-    console.log('Handle split bill');
+    const isTotalAmountValid = checkTotalAmount(fields);
+    if (!isTotalAmountValid) return;
+    const formatted = formatData(fields);
+    dispatch(setPayers(formatted));
+    navigate(`${RouteEnum.ADD_RECEIPT}/4`);
   };
 
   const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
     const hasError = data.payers.some((el) => el.error);
-    const isTotalAmountValid = checkTotalAmount(data);
+    const isTotalAmountValid = checkTotalAmount(data.payers);
 
     if (hasError || !isTotalAmountValid) return;
 
-    const formatted = data.payers.map((payer) => {
-      delete payer.error;
-      payer.amount = formatAmount(payer.amount);
-      return payer;
-    });
+    const formatted = formatData(data.payers);
 
     console.log('data', data);
+    console.log('data', formatted);
+    // TODO Send to API
   };
 
   return (
@@ -125,10 +143,14 @@ const ExpenseForm = (): ReactElement => {
                     name={field.name}
                     onBlur={field.onBlur}
                     onChange={(ev) => {
-                      const value = ev?.target?.value;
+                      const value = ev?.target?.value || ev;
                       const isValid = checkValidity(value, index);
                       if (isValid) {
                         field.onChange(ev);
+                        update(index, {
+                          ...fields[index],
+                          amount: value,
+                        });
                       }
                     }}
                     value={field.value || ''}
@@ -141,6 +163,16 @@ const ExpenseForm = (): ReactElement => {
         })}
       </List>
       <Stack sx={{ mt: 'auto', pb: (theme) => theme.spacing(3) }} spacing={2}>
+        <Typography align="right" color="text.secondary">
+          Łącznie:{' '}
+          <Typography
+            fontWeight={500}
+            component="span"
+            color={checkTotalAmount(fields) ? 'inherit' : 'error.main'}
+          >
+            {countTotalAmount(fields)}
+          </Typography>
+        </Typography>
         <Button onClick={handleSplitBill} variant="outlined">
           Podziel rachunek między osoby
         </Button>
