@@ -1,65 +1,62 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import ImageUploading, { ImageListType } from 'react-images-uploading';
-import ImagePreview from 'components/atoms/ImagePreview/ImagePreview';
 import { Box, Button, Stack } from '@mui/material';
+import ImagePreview from 'components/atoms/ImagePreview/ImagePreview';
 
-const ImageInput = (): ReactElement => {
-  const [images, setImages] = useState([]);
+interface Props {
+  images: ImageListType;
+  onChange: (imageList: ImageListType) => void;
+}
 
-  const onChange = (imageList: ImageListType) => {
-    setImages(imageList as never[]);
-  };
-
-  return (
-    <ImageUploading value={images} onChange={onChange}>
-      {({ imageList, onImageUpload, onImageUpdate, onImageRemove }) => {
-        const image = imageList[0];
-        return (
-          <Box
+const ImageInput = ({ images, onChange }: Props): ReactElement => (
+  <ImageUploading value={images} onChange={onChange}>
+    {({ imageList, onImageUpload, onImageUpdate, onImageRemove }) => {
+      const image = imageList[0];
+      return (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <ImagePreview
+            image={image}
+            onImageUpload={onImageUpload}
+            onImageUpdate={() => onImageUpdate(0)}
+          />
+          <Stack
             sx={{
-              display: 'flex',
-              alignItems: 'center',
+              marginLeft: (theme) => theme.spacing(2),
+              flexGrow: 1,
             }}
+            direction="row"
+            spacing={2}
           >
-            <ImagePreview
-              image={image}
-              onImageUpload={onImageUpload}
-              onImageUpdate={() => onImageUpdate(0)}
-            />
-            <Stack
+            <Button
               sx={{
-                marginLeft: (theme) => theme.spacing(2),
-                flexGrow: 1,
+                flexBasis: '100%',
               }}
-              direction="row"
-              spacing={2}
+              variant="contained"
+              onClick={image ? () => onImageUpdate(0) : onImageUpload}
             >
+              {image ? 'Zmień' : 'Wgraj'}
+            </Button>
+            {image && (
               <Button
                 sx={{
                   flexBasis: '100%',
                 }}
-                variant="contained"
-                onClick={image ? () => onImageUpdate(0) : onImageUpload}
+                variant="outlined"
+                onClick={() => onImageRemove(0)}
               >
-                {image ? 'Zmień' : 'Wgraj'}
+                Usuń
               </Button>
-              {image && (
-                <Button
-                  sx={{
-                    flexBasis: '100%',
-                  }}
-                  variant="outlined"
-                  onClick={() => onImageRemove(0)}
-                >
-                  Usuń
-                </Button>
-              )}
-            </Stack>
-          </Box>
-        );
-      }}
-    </ImageUploading>
-  );
-};
+            )}
+          </Stack>
+        </Box>
+      );
+    }}
+  </ImageUploading>
+);
 
 export default ImageInput;

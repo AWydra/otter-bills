@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from 'hooks/redux';
-import { setShop, setAmount, setDate } from 'slices/billSlice';
+import { setShop, setAmount, setDate, setDescription, setImages } from 'slices/billSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import * as yup from 'yup';
@@ -11,11 +11,14 @@ import ShopSelect from 'components/molecules/ShopSelect/ShopSelect';
 import { ShopOptionIterface } from 'interfaces';
 import { RouteEnum } from 'enums';
 import { formatAmount } from 'utils';
+import ImageInput from 'components/molecules/ImageInput/ImageInput';
+import { ImageListType } from 'react-images-uploading';
 
 interface FormValueInterface {
   shop: ShopOptionIterface;
   amount: string;
   date: Date | number | string;
+  description: string;
 }
 
 const schema = yup.object().shape({
@@ -34,14 +37,13 @@ const schema = yup.object().shape({
 });
 
 const BillForm = (): ReactElement => {
-  const { shop, amount, date } = useAppSelector((state) => state.bill);
+  const { shop, amount, date, description, images } = useAppSelector((state) => state.bill);
   const dispatch = useAppDispatch();
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
-    trigger,
   } = useForm<FormValueInterface>({
     resolver: yupResolver(schema),
   });
@@ -51,7 +53,12 @@ const BillForm = (): ReactElement => {
     dispatch(setShop(data.shop));
     dispatch(setAmount(formatAmount(data.amount)));
     dispatch(setDate(data.date.toString()));
+    dispatch(setDescription(data.description));
     navigate(`${RouteEnum.ADD_RECEIPT}/2`);
+  };
+
+  const handleImageChange = (imageList: ImageListType) => {
+    dispatch(setImages(imageList));
   };
 
   return (
@@ -94,7 +101,6 @@ const BillForm = (): ReactElement => {
                 const pattern = /^[0-9,.]+$/;
                 if (pattern.test(value)) {
                   field.onChange(ev);
-                  trigger('amount');
                 }
               }}
               sx={{ width: '100%' }}
@@ -151,6 +157,21 @@ const BillForm = (): ReactElement => {
                   },
                 },
               }}
+            />
+          )}
+        />
+        <ImageInput images={images} onChange={handleImageChange} />
+        <Controller
+          name="description"
+          control={control}
+          defaultValue={description}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              id="outlined-multiline-static"
+              label="Dodatkowe informacje"
+              multiline
+              rows={2}
             />
           )}
         />

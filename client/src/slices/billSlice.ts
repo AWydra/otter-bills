@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ImageListType } from 'react-images-uploading';
 import { ShopOptionIterface, PayersInterface } from 'interfaces';
 
 interface BillState {
   shop: ShopOptionIterface;
   amount: string;
   date: Date | number | string;
+  description: string;
+  images: ImageListType;
   payers: PayersInterface[];
 }
 
@@ -20,6 +23,8 @@ const initialState: BillState = {
   },
   amount: '',
   date: new Date().toString(),
+  description: '',
+  images: [],
   payers: [],
 };
 
@@ -36,6 +41,12 @@ export const billSlice = createSlice({
     setDate: (state, action: PayloadAction<Date | number | string>) => {
       state.date = action.payload;
     },
+    setDescription: (state, action: PayloadAction<string>) => {
+      state.description = action.payload;
+    },
+    setImages: (state, action: PayloadAction<ImageListType>) => {
+      state.images = action.payload;
+    },
     setPayers: (state, action: PayloadAction<PayersInterface[]>) => {
       state.payers = action.payload;
     },
@@ -50,6 +61,14 @@ export const billSlice = createSlice({
   },
 });
 
-export const { setShop, setAmount, setDate, setPayers, setReceiptSplit } = billSlice.actions;
+export const {
+  setShop,
+  setAmount,
+  setDate,
+  setDescription,
+  setPayers,
+  setImages,
+  setReceiptSplit,
+} = billSlice.actions;
 
 export default billSlice.reducer;
