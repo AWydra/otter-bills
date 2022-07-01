@@ -6,8 +6,9 @@ import {
   Paper,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
-import AddIcon from '@mui/icons-material/Add';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { RouteEnum } from 'enums';
 
 const BottomNavigation = (): ReactElement => {
@@ -42,9 +43,16 @@ const BottomNavigation = (): ReactElement => {
           to={`${RouteEnum.ADD_RECEIPT}/1`}
           value={RouteEnum.ADD_RECEIPT}
           label="Dodaj"
-          icon={<AddIcon />}
+          icon={<ReceiptLongIcon />}
         />
-        <BottomNavigationAction label="Page 3" icon={<FavoriteIcon />} />
+
+        <BottomNavigationAction
+          component={Link}
+          to={RouteEnum.BALANCE}
+          value={RouteEnum.BALANCE}
+          label="Bilans"
+          icon={<AccountBalanceWalletIcon />}
+        />
         <BottomNavigationAction label="Page 4" icon={<FavoriteIcon />} />
       </MuiBottomNavigation>
     </Paper>

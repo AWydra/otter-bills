@@ -9,11 +9,11 @@ import styles from './styles';
 const Home = (): ReactElement => {
   return (
     <Box sx={styles.container}>
-      <Box display="grid" sx={styles.cardContainer}>
+      <Box component={Link} to={RouteEnum.BALANCE} display="grid" sx={styles.cardContainer}>
         <ExpenseCard label="Należności" color="success.main" amount="2137" />
         <ExpenseCard label="Zobowiązania" color="error.main" amount="69" />
       </Box>
-      <MuiLink component={Link} to="/details" variant="body2" sx={styles.detailsButton}>
+      <MuiLink component={Link} to={RouteEnum.BALANCE} variant="body2" sx={styles.detailsButton}>
         Szczegóły
       </MuiLink>
       <Button

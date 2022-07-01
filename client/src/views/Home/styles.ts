@@ -11,6 +11,7 @@ const styles: StyleInterface = {
     display: 'grid',
     gap: 1,
     gridTemplateColumns: '1fr 1fr',
+    textDecoration: 'none',
   },
   detailsButton: {
     alignSelf: 'flex-end',
