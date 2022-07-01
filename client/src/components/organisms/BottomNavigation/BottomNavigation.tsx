@@ -45,7 +45,6 @@ const BottomNavigation = (): ReactElement => {
           label="Dodaj"
           icon={<ReceiptLongIcon />}
         />
-
         <BottomNavigationAction
           component={Link}
           to={RouteEnum.BALANCE}
