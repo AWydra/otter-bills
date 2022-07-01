@@ -1,8 +1,9 @@
 import React, { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
+import { RouteEnum } from 'enums';
 import { Box, Button, Link as MuiLink, Typography } from '@mui/material';
 import ExpenseCard from 'components/molecules/ExpenseCard/ExpenseCard';
 import HistoryList from 'components/organisms/HistoryList/HistoryList';
-import { Link } from 'react-router-dom';
 import styles from './styles';
 
 const Home = (): ReactElement => {
@@ -15,7 +16,12 @@ const Home = (): ReactElement => {
       <MuiLink component={Link} to="/details" variant="body2" sx={styles.detailsButton}>
         Szczegóły
       </MuiLink>
-      <Button variant="contained" sx={styles.addButton}>
+      <Button
+        component={Link}
+        to={`${RouteEnum.ADD_RECEIPT}/1`}
+        variant="contained"
+        sx={styles.addButton}
+      >
         Dodaj rachunek
       </Button>
 

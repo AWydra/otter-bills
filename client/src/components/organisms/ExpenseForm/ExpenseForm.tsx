@@ -170,7 +170,7 @@ const ExpenseForm = (): ReactElement => {
             component="span"
             color={checkTotalAmount(fields) ? 'inherit' : 'error.main'}
           >
-            {countTotalAmount(fields)}
+            {countTotalAmount(fields)} PLN
           </Typography>
         </Typography>
         <Button onClick={handleSplitBill} variant="outlined">
