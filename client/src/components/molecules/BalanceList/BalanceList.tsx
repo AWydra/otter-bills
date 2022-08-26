@@ -1,5 +1,7 @@
 import React, { ReactElement } from 'react';
-import { BalanceListEnum } from 'enums';
+import { useNavigate } from 'react-router-dom';
+import { BalanceResponseInterface } from 'interfaces';
+import { BalanceListEnum, RouteEnum } from 'enums';
 import { balaceCondition } from 'utils/balaceCondition';
 import {
   IconButton,
@@ -11,7 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 import AmountChip from 'components/atoms/AmountChip/AmountChip';
-import NotificationsIcon from '@mui/icons-material/NotificationsOutlined';
 import PaymentIcon from '@mui/icons-material/Payment';
 
 const data = [
@@ -33,14 +34,21 @@ const data = [
     amount: '41,82',
     avatar: 'https://i.pravatar.cc/300?img=3',
   },
-];
+] as BalanceResponseInterface[];
 
 interface Props {
   type: BalanceListEnum;
 }
 
 const BalanceList = ({ type }: Props): ReactElement => {
+  const navigate = useNavigate();
   const header = balaceCondition(type, 'Należności', 'Zobowiązania');
+
+  const handlePayment = (payer: BalanceResponseInterface) => {
+    navigate(RouteEnum.PAYMENT, {
+      state: payer,
+    });
+  };
 
   return (
     <List
@@ -58,8 +66,13 @@ const BalanceList = ({ type }: Props): ReactElement => {
           <ListItem
             key={id}
             secondaryAction={
-              <IconButton size="small" color="primary" aria-label="add">
-                {balaceCondition(type, <NotificationsIcon />, <PaymentIcon />)}
+              <IconButton
+                size="small"
+                color="primary"
+                aria-label="add"
+                onClick={() => handlePayment({ id, name, amount, avatar })}
+              >
+                {balaceCondition(type, null, <PaymentIcon />)}
               </IconButton>
             }
             disablePadding

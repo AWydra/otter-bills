@@ -13,6 +13,7 @@ const AmountChip = ({ type, amount }: Props): ReactElement => {
 
   return (
     <Box
+      component="span"
       sx={(theme) => ({
         minWidth: theme.spacing(2.75),
         height: theme.spacing(2.75),

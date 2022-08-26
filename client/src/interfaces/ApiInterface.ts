@@ -12,3 +12,7 @@ export interface PayersResponseInterface {
   name: string;
   avatar: string;
 }
+
+export interface BalanceResponseInterface extends PayersResponseInterface {
+  amount: string;
+}

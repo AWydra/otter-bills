@@ -12,3 +12,11 @@ export const spreadSx = (...sx: SxProps<Theme>[]) => {
   });
   return arr;
 };
+
+export const styleCondition = <T, U>(condition: boolean, ifTrue: T, ifFalse: U) => {
+  if (condition) {
+    return ifTrue;
+  }
+
+  return ifFalse;
+};
