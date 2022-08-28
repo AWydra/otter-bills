@@ -36,7 +36,7 @@ const ImageInput = ({ images, onChange }: Props): ReactElement => (
               sx={{
                 flexBasis: '100%',
               }}
-              variant="contained"
+              variant={image ? 'contained' : 'outlined'}
               onClick={image ? () => onImageUpdate(0) : onImageUpload}
             >
               {image ? 'Zmień' : 'Wgraj'}
