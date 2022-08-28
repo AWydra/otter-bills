@@ -4,5 +4,6 @@ export enum RouteEnum {
   ADD_RECEIPT_STEP = '/add-receipt/:step',
   BALANCE = '/balance',
   PAYMENT = '/payment',
+  LOGIN = '/login',
   NOT_FOUND = '/404',
 }

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   BottomNavigation as MuiBottomNavigation,
@@ -11,8 +11,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { RouteEnum } from 'enums';
 
-const BottomNavigation = (): ReactElement => {
+const hideOnRoutes = [RouteEnum.LOGIN];
+
+const BottomNavigation = () => {
   const location = useLocation();
+  const [visible, setVisible] = useState<boolean>(true);
   const [value, setValue] = useState<string>(location.pathname);
 
   useEffect(() => {
@@ -22,7 +25,15 @@ const BottomNavigation = (): ReactElement => {
     setValue(newValue);
   }, [location.pathname]);
 
-  return (
+  useEffect(() => {
+    if (hideOnRoutes.includes(location.pathname as RouteEnum)) {
+      setVisible(false);
+    } else {
+      setVisible(true);
+    }
+  }, [location.pathname]);
+
+  return !visible ? null : (
     <Paper elevation={3} sx={{ width: '100%', position: 'fixed', bottom: 0 }}>
       <MuiBottomNavigation
         showLabels
