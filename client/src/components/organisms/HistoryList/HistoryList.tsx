@@ -1,7 +1,9 @@
 import React, { ReactElement, Fragment } from 'react';
-import { Box, Divider, List } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Box, Button, Divider, List } from '@mui/material';
 import HistoryListItem from 'components/molecules/HistoryListItem/HistoryListItem';
 import { HistoryResponseInterface } from 'interfaces';
+import { RouteEnum } from 'enums';
 import styles from './styles';
 
 const data = [
@@ -46,13 +48,18 @@ const data = [
   },
 ] as HistoryResponseInterface[];
 
-const HistoryList = (): ReactElement => {
+interface Props {
+  preview?: boolean;
+}
+
+const HistoryList = ({ preview = false }: Props): ReactElement => {
   return (
     <Box>
       <List sx={styles.list} dense>
         {data.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
           <Fragment key={id}>
             <HistoryListItem
+              id={id}
               label={label}
               amount={amount}
               paidBy={paidBy}
@@ -63,6 +70,17 @@ const HistoryList = (): ReactElement => {
           </Fragment>
         ))}
       </List>
+      {preview && (
+        <Button
+          component={Link}
+          to={RouteEnum.HISTORY}
+          sx={{
+            width: '100%',
+          }}
+        >
+          Pełna historia
+        </Button>
+      )}
     </Box>
   );
 };

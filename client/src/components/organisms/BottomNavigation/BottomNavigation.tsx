@@ -7,8 +7,8 @@ import {
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import HistoryIcon from '@mui/icons-material/History';
 import { RouteEnum } from 'enums';
 
 const hideOnRoutes = [RouteEnum.LOGIN];
@@ -63,7 +63,13 @@ const BottomNavigation = () => {
           label="Bilans"
           icon={<AccountBalanceWalletIcon />}
         />
-        <BottomNavigationAction label="Page 4" icon={<FavoriteIcon />} />
+        <BottomNavigationAction
+          component={Link}
+          to={RouteEnum.HISTORY}
+          value={RouteEnum.HISTORY}
+          label="Historia"
+          icon={<HistoryIcon />}
+        />
       </MuiBottomNavigation>
     </Paper>
   );

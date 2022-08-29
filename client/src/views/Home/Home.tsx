@@ -28,7 +28,7 @@ const Home = (): ReactElement => {
       <Typography variant="body2" color="text.secondary">
         Ostatnie operacje
       </Typography>
-      <HistoryList />
+      <HistoryList preview />
     </Box>
   );
 };

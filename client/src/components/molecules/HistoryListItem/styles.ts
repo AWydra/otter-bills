@@ -1,7 +1,8 @@
 import { StyleInterface } from 'interfaces';
 
 const styles: StyleInterface = {
-  listItem: { px: 1, alignItems: 'flex-start' },
+  listItem: { px: 0, alignItems: 'flex-start' },
+  listItem_button: { px: 1 },
   listItem_primary: { display: 'flex', justifyContent: 'space-between' },
   listItem_secondary: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   listItem_avatarGroup: {

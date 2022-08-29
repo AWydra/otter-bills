@@ -11,7 +11,7 @@ import {
   IconButton,
 } from '@mui/material';
 import AutoWidthInput from 'components/molecules/AutoWidthInput/AutoWidthInput';
-import ExpenseDialog from 'components/organisms/ExpenseDialog/ExpenseDialog';
+import ExpenseDialog from 'components/organisms/Dialogs/ExpenseDialog/ExpenseDialog';
 import CalculateIcon from '@mui/icons-material/Calculate';
 
 interface Props {
