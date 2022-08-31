@@ -21,6 +21,8 @@ const BottomNavigation = () => {
   useEffect(() => {
     const newValue = location.pathname.includes(RouteEnum.ADD_RECEIPT)
       ? RouteEnum.ADD_RECEIPT
+      : location.pathname.includes(RouteEnum.HISTORY)
+      ? RouteEnum.HISTORY
       : location.pathname;
     setValue(newValue);
   }, [location.pathname]);

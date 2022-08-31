@@ -12,10 +12,12 @@ import { RouteEnum } from 'enums';
 const MainRoutes = (): ReactElement => (
   <Routes>
     <Route path={RouteEnum.HOME} element={<Home />} />
+    <Route path={RouteEnum.HOME_ID} element={<Home />} />
     <Route path={RouteEnum.ADD_RECEIPT_STEP} element={<AddReceipt />} />
     <Route path={RouteEnum.BALANCE} element={<Balance />} />
     <Route path={RouteEnum.PAYMENT} element={<Payment />} />
     <Route path={RouteEnum.HISTORY} element={<History />} />
+    <Route path={RouteEnum.HISTORY_ID} element={<History />} />
     <Route path={RouteEnum.LOGIN} element={<Login />} />
     <Route path={RouteEnum.NOT_FOUND} element={<NotFound />} />
     <Route path="*" element={<Navigate to={RouteEnum.NOT_FOUND} replace />} />

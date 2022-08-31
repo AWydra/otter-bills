@@ -16,3 +16,20 @@ export interface PayersResponseInterface {
 export interface BalanceResponseInterface extends PayersResponseInterface {
   amount: string;
 }
+
+export interface ExpenseDetailsPayersInterface {
+  id: number;
+  name: string;
+  avatar: string;
+  amount: string;
+}
+
+export interface ExpenseDetailsResponseInterface {
+  id: number;
+  image?: string;
+  shop: string;
+  amount: string;
+  date: string;
+  additionalInfo?: string;
+  payers: ExpenseDetailsPayersInterface[];
+}

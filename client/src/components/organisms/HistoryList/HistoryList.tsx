@@ -46,6 +46,45 @@ const data = [
     ],
     refund: false,
   },
+  {
+    id: 4,
+    label: 'Zwrot kosztów',
+    amount: 20.23,
+    paidBy: 'Patrycja',
+    avatars: ['https://mui.com/static/images/avatar/5.jpg'],
+    refund: true,
+  },
+  {
+    id: 5,
+    label: 'Zwrot kosztów',
+    amount: -500,
+    paidBy: 'Goha',
+    avatars: ['https://mui.com/static/images/avatar/6.jpg'],
+    refund: true,
+  },
+  {
+    id: 6,
+    label: 'Biedronka',
+    amount: 52.39,
+    paidBy: 'Ja',
+    avatars: [
+      'https://avatars.githubusercontent.com/u/86574268?v=4',
+      'https://mui.com/static/images/avatar/5.jpg',
+      'https://mui.com/static/images/avatar/6.jpg',
+    ],
+    refund: false,
+  },
+  {
+    id: 7,
+    label: 'Lidl',
+    amount: 32.99,
+    paidBy: 'Patrycja',
+    avatars: [
+      'https://avatars.githubusercontent.com/u/86574268?v=4',
+      'https://mui.com/static/images/avatar/3.jpg',
+    ],
+    refund: false,
+  },
 ] as HistoryResponseInterface[];
 
 interface Props {
@@ -53,10 +92,12 @@ interface Props {
 }
 
 const HistoryList = ({ preview = false }: Props): ReactElement => {
+  const preparedData = preview ? data.slice(0, 4) : data;
+
   return (
     <Box>
       <List sx={styles.list} dense>
-        {data.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
+        {preparedData.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
           <Fragment key={id}>
             <HistoryListItem
               id={id}
@@ -65,6 +106,7 @@ const HistoryList = ({ preview = false }: Props): ReactElement => {
               paidBy={paidBy}
               avatars={avatars}
               refund={refund}
+              preview={preview}
             />
             {i < data.length - 1 && <Divider component="li" />}
           </Fragment>

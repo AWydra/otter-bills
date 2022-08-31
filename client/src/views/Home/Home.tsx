@@ -4,6 +4,7 @@ import { RouteEnum } from 'enums';
 import { Box, Button, Link as MuiLink, Typography } from '@mui/material';
 import ExpenseCard from 'components/molecules/ExpenseCard/ExpenseCard';
 import HistoryList from 'components/organisms/HistoryList/HistoryList';
+import ExpenseDetailsDialog from 'components/organisms/Dialogs/ExpenseDetailsDialog/ExpenseDetailsDialog';
 import styles from './styles';
 
 const Home = (): ReactElement => {
@@ -29,6 +30,7 @@ const Home = (): ReactElement => {
         Ostatnie operacje
       </Typography>
       <HistoryList preview />
+      <ExpenseDetailsDialog />
     </Box>
   );
 };

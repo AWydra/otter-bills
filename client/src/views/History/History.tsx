@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HistoryList from 'components/organisms/HistoryList/HistoryList';
+import ExpenseDetailsDialog from 'components/organisms/Dialogs/ExpenseDetailsDialog/ExpenseDetailsDialog';
 
 const History = () => {
   // TODO implement filter options
@@ -89,6 +90,7 @@ const History = () => {
       >
         <HistoryList />
       </Box>
+      <ExpenseDetailsDialog />
     </Box>
   );
 };
