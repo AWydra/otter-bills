@@ -1,5 +1,5 @@
 {
-  "name": "otter-bills",
+  "name": "otter-bills-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
