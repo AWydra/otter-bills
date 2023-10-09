@@ -11,11 +11,7 @@ interface FormValueInterface {
 }
 
 const schema = yup.object().shape({
-  email: yup
-    .string()
-    .required('Wymagane')
-    .min(3, 'Minimum 3 znaki')
-    .max(15, 'Maksymalnie 15 znaków'),
+  email: yup.string().required('Wymagane').min(3, 'Minimum 3 znaki'),
   password: yup
     .string()
     .required('Wymagane')

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
     "target": "ESNEXT",
     "lib": [],
     "module": "NodeNext",
@@ -11,5 +12,8 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src", "package.json"]
+  "include": ["src", "package.json"],
+  "ts-node": {
+    "esm": true
+  }
 }

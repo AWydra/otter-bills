@@ -5,9 +5,11 @@ import DetailItem from 'components/molecules/DetailItem/DetailItem';
 import {
   AppBar,
   Box,
+  ButtonBase,
   Dialog,
   Divider,
   IconButton,
+  Modal,
   Slide,
   Stack,
   Toolbar,
@@ -63,6 +65,7 @@ const data = {
 
 const ExpenseDetailsDialog = () => {
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -75,48 +78,87 @@ const ExpenseDetailsDialog = () => {
   };
 
   return (
-    <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-      <div
-        style={{
-          backgroundImage: `url("${data.image}")`,
-          height: 150,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-        }}
-      />
-      <AppBar sx={{ position: 'relative' }}>
-        <Toolbar>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Szczegóły
-          </Typography>
-          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-            <CloseIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Box
+    <>
+      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <ButtonBase
+          onClick={() => setModalOpen(true)}
+          style={{
+            backgroundImage: `url("${data.image}")`,
+            height: 150,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+          }}
+        />
+
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Szczegóły
+            </Typography>
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Box
+          sx={{
+            padding: (theme) => theme.spacing(2),
+          }}
+        >
+          <Stack spacing={1} divider={<Divider />}>
+            <DetailItem icon={<StoreIcon />} title="Sklep" content={data.shop} />
+            <DetailItem
+              icon={<AccountBalanceWalletIcon />}
+              title="Kwota"
+              content={`${data.amount} PLN`}
+            />
+            <DetailItem icon={<CalendarMonthIcon />} title="Data" content={data.date} />
+            <DetailItem
+              icon={<InfoIcon />}
+              title="Dodatkowe informacje"
+              content={data.additionalInfo}
+              block
+            />
+          </Stack>
+        </Box>
+        <BillSplitList payers={data.payers} />
+      </Dialog>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
         sx={{
-          padding: (theme) => theme.spacing(2),
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: 2,
+          py: 5,
+        }}
+        BackdropProps={{
+          sx: {
+            backgroundColor: 'rgba(0,0,0,0.85)',
+          },
         }}
       >
-        <Stack spacing={1} divider={<Divider />}>
-          <DetailItem icon={<StoreIcon />} title="Sklep" content={data.shop} />
-          <DetailItem
-            icon={<AccountBalanceWalletIcon />}
-            title="Kwota"
-            content={`${data.amount} PLN`}
+        <Box>
+          <IconButton
+            aria-label="delete"
+            sx={{ position: 'absolute', top: 20, right: 20, color: 'white' }}
+            onClick={() => setModalOpen(false)}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Box
+            component="img"
+            src={data.image}
+            alt="Receipt"
+            sx={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
           />
-          <DetailItem icon={<CalendarMonthIcon />} title="Data" content={data.date} />
-          <DetailItem
-            icon={<InfoIcon />}
-            title="Dodatkowe informacje"
-            content={data.additionalInfo}
-            block
-          />
-        </Stack>
-      </Box>
-      <BillSplitList payers={data.payers} />
-    </Dialog>
+        </Box>
+      </Modal>
+    </>
   );
 };
 
