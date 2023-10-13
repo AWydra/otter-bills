@@ -1,7 +1,5 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from 'hooks/redux';
-import { setShop, setAmount, setDate, setDescription, setImages } from 'slices/billSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import * as yup from 'yup';
@@ -13,6 +11,7 @@ import { RouteEnum } from 'enums';
 import { formatAmount } from 'utils';
 import ImageInput from 'components/molecules/ImageInput/ImageInput';
 import { ImageListType } from 'react-images-uploading';
+import { useBillContext } from 'contexts/BillContext';
 
 interface FormValueInterface {
   shop: ShopOptionIterface;
@@ -37,8 +36,18 @@ const schema = yup.object().shape({
 });
 
 const BillForm = (): ReactElement => {
-  const { shop, amount, date, description, images } = useAppSelector((state) => state.bill);
-  const dispatch = useAppDispatch();
+  const {
+    shop,
+    setShop,
+    amount,
+    setAmount,
+    date,
+    setDate,
+    description,
+    setDescription,
+    images,
+    setImages,
+  } = useBillContext();
   const {
     control,
     handleSubmit,
@@ -50,15 +59,15 @@ const BillForm = (): ReactElement => {
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<FormValueInterface> = (data) => {
-    dispatch(setShop(data.shop));
-    dispatch(setAmount(formatAmount(data.amount)));
-    dispatch(setDate(data.date.toString()));
-    dispatch(setDescription(data.description));
+    setShop(data.shop);
+    setAmount(formatAmount(data.amount));
+    setDate(data.date.toString());
+    setDescription(data.description);
     navigate(`${RouteEnum.ADD_RECEIPT}/2`);
   };
 
   const handleImageChange = (imageList: ImageListType) => {
-    dispatch(setImages(imageList));
+    setImages(imageList);
   };
 
   return (

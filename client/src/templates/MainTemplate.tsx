@@ -8,6 +8,7 @@ import ThemeProvider from 'theme/ThemeProvider';
 import GlobalStyles from 'theme/GlobalStyles';
 import Navbar from 'components/organisms/Navbar/Navbar';
 import BottomNavigation from 'components/organisms/BottomNavigation/BottomNavigation';
+import { BillContextProvider } from 'contexts/BillContext';
 import ErrorBoundary from './ErrorBoundary';
 
 interface Props {
@@ -23,7 +24,7 @@ const MainTemplate = ({ children }: Props): ReactElement => {
           <GlobalStyles />
           <Navbar />
           <Box minHeight="calc(100vh - 56px)" display="flex" flexDirection="column" pb={7}>
-            {children}
+            <BillContextProvider>{children}</BillContextProvider>
           </Box>
           <BottomNavigation />
         </ThemeProvider>

@@ -49,7 +49,8 @@
     "react/state-in-constructor": "off",
     "no-console": ["warn", { "allow": ["error", "warn"] }],
     "no-param-reassign": ["error", { "props": false }],
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "react/jsx-no-constructed-context-values": "off"
   },
   "settings": {
     "import/resolver": {

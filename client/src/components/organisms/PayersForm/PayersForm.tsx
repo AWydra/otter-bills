@@ -1,7 +1,5 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from 'hooks';
-import { setPayers } from 'slices/billSlice';
 import {
   Box,
   Button,
@@ -16,6 +14,7 @@ import {
 } from '@mui/material';
 import { PayersInterface } from 'interfaces';
 import { RouteEnum } from 'enums';
+import { useBillContext } from 'contexts/BillContext';
 
 const data: PayersInterface[] = [
   {
@@ -112,9 +111,8 @@ const data: PayersInterface[] = [
 ];
 
 const PayersForm = (): ReactElement => {
-  const { payers } = useAppSelector((state) => state.bill);
+  const { payers, setPayers } = useBillContext();
   const [checked, setChecked] = React.useState<PayersInterface[]>(payers);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleToggle = (payer: PayersInterface) => {
@@ -128,7 +126,7 @@ const PayersForm = (): ReactElement => {
   };
 
   const handlePayers = () => {
-    dispatch(setPayers(checked));
+    setPayers(checked);
     navigate(`${RouteEnum.ADD_RECEIPT}/3`);
   };
 

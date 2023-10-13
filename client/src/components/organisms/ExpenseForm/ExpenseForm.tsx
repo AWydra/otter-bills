@@ -1,15 +1,14 @@
 import React, { ReactElement } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useBillContext } from 'contexts/BillContext';
 import { useForm, useFieldArray, SubmitHandler, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAppDispatch, useAppSelector } from 'hooks';
 import { PayersInterface } from 'interfaces';
 import { Box, Button, List, Stack, Typography } from '@mui/material';
 import ExpenseItem from 'components/molecules/ExpenseItem/ExpenseItem';
 import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
 import { amountToNumber, formatAmount } from 'utils';
-import { setPayers } from 'slices/billSlice';
-import { useNavigate } from 'react-router-dom';
 import { RouteEnum } from 'enums';
 
 interface PayerErrorInterface extends PayersInterface {
@@ -21,12 +20,10 @@ interface FormValueInterface {
 }
 
 const ExpenseForm = (): ReactElement => {
-  const storePayers = useAppSelector((state) => state.bill.payers);
-  const storeAmount = useAppSelector((state) => state.bill.amount);
-  const dispatch = useAppDispatch();
+  const { payers, setPayers, amount } = useBillContext();
   const navigate = useNavigate();
 
-  const payersList: PayerErrorInterface[] = storePayers.map((payer) => ({
+  const payersList: PayerErrorInterface[] = payers.map((payer) => ({
     ...payer,
     error: false,
   }));
@@ -52,8 +49,8 @@ const ExpenseForm = (): ReactElement => {
     keyName: 'key',
   });
 
-  const formatData = (payers: PayerErrorInterface[]): PayersInterface[] =>
-    payers.map((payer) => {
+  const formatData = (formPayers: PayerErrorInterface[]): PayersInterface[] =>
+    formPayers.map((payer) => {
       delete payer.error;
       payer.amount = formatAmount(payer.amount);
       return payer;
@@ -75,8 +72,8 @@ const ExpenseForm = (): ReactElement => {
     return true;
   };
 
-  const countTotalAmount = (payers: PayerErrorInterface[]) => {
-    return payers
+  const countTotalAmount = (formPayers: PayerErrorInterface[]) => {
+    return formPayers
       .reduce((partialSum, payer) => {
         const numberAmount = amountToNumber(payer.amount);
         return partialSum + numberAmount;
@@ -84,10 +81,10 @@ const ExpenseForm = (): ReactElement => {
       .toFixed(2);
   };
 
-  const checkTotalAmount = (payers: PayerErrorInterface[]) => {
-    const totalAmount = countTotalAmount(payers);
+  const checkTotalAmount = (formPayers: PayerErrorInterface[]) => {
+    const totalAmount = countTotalAmount(formPayers);
 
-    if (amountToNumber(totalAmount) > amountToNumber(storeAmount)) {
+    if (amountToNumber(totalAmount) > amountToNumber(amount)) {
       // TODO Alert
       return false;
     }
@@ -99,7 +96,7 @@ const ExpenseForm = (): ReactElement => {
     const isTotalAmountValid = checkTotalAmount(fields);
     if (!isTotalAmountValid) return;
     const formatted = formatData(fields);
-    dispatch(setPayers(formatted));
+    setPayers(formatted);
     navigate(`${RouteEnum.ADD_RECEIPT}/4`);
   };
 

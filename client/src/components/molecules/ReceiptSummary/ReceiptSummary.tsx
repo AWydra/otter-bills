@@ -1,16 +1,14 @@
 import React, { ReactElement } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useAppSelector } from 'hooks';
 import { countSplitAmount } from 'utils';
+import { useBillContext } from 'contexts/BillContext';
 
 interface Props {
   split?: boolean;
 }
 
 const ReceiptSummary = ({ split = false }: Props): ReactElement => {
-  const shop = useAppSelector((state) => state.bill.shop);
-  const amount = useAppSelector((state) => state.bill.amount);
-  const payers = useAppSelector((state) => state.bill.payers);
+  const { shop, amount, payers } = useBillContext();
   let amountToShow = amount;
 
   if (split) {

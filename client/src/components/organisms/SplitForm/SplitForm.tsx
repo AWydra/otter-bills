@@ -11,15 +11,12 @@ import {
   Checkbox,
 } from '@mui/material';
 import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { setReceiptSplit } from 'slices/billSlice';
 import { PayersInterface } from 'interfaces';
 import { amountToNumber, countSplitAmount } from 'utils';
+import { useBillContext } from 'contexts/BillContext';
 
 const SplitForm = (): ReactElement => {
-  const amount = useAppSelector((state) => state.bill.amount);
-  const payers = useAppSelector((state) => state.bill.payers);
-  const dispatch = useAppDispatch();
+  const { amount, payers, splitReceipt } = useBillContext();
   const splitParticipants = payers.filter((payer) => payer.splitsReceipt);
   const splitAmount = amountToNumber(countSplitAmount(amount, payers));
 
@@ -51,7 +48,7 @@ const SplitForm = (): ReactElement => {
                   checked={payer.splitsReceipt}
                   inputProps={{ 'aria-labelledby': labelId }}
                   onClick={() =>
-                    dispatch(setReceiptSplit({ id: payer.id, splitsReceipt: !payer.splitsReceipt }))
+                    splitReceipt({ id: payer.id, splitsReceipt: !payer.splitsReceipt })
                   }
                 />
               }
@@ -59,9 +56,7 @@ const SplitForm = (): ReactElement => {
             >
               <ListItemButton
                 sx={{ px: 0 }}
-                onClick={() =>
-                  dispatch(setReceiptSplit({ id: payer.id, splitsReceipt: !payer.splitsReceipt }))
-                }
+                onClick={() => splitReceipt({ id: payer.id, splitsReceipt: !payer.splitsReceipt })}
               >
                 <ListItemAvatar>
                   <Avatar alt={payer.name} src={payer.avatar} />
