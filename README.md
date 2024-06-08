@@ -1,46 +1,40 @@
-# Getting Started with Create React App
+# Turborepo kitchen sink starter
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an official starter Turborepo with multiple meta-frameworks all working in harmony and sharing packages.
 
-## Available Scripts
+This example also shows how to use [Workspace Configurations](https://turbo.build/repo/docs/core-concepts/monorepos/configuring-workspaces).
 
-In the project directory, you can run:
+## Using this example
 
-### `npm start`
+Run the following command:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```sh
+npx create-turbo@latest -e kitchen-sink
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## What's inside?
 
-### `npm test`
+This Turborepo includes the following packages and apps:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Apps and Packages
 
-### `npm run build`
+- `api`: an [Express](https://expressjs.com/) server
+- `storefront`: a [Next.js](https://nextjs.org/) app
+- `admin`: a [Vite](https://vitejs.dev/) single page app
+- `blog`: a [Remix](https://remix.run/) blog
+- `@repo/eslint-config`: ESLint configurations used throughout the monorepo
+- `@repo/jest-presets`: Jest configurations
+- `@repo/logger`: isomorphic logger (a small wrapper around console.log)
+- `@repo/ui`: a dummy React UI library (which contains `<CounterButton>` and `<Link>` components)
+- `@repo/typescript-config`: tsconfig.json's used throughout the monorepo
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Utilities
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This Turborepo has some additional tools already setup for you:
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Jest](https://jestjs.io) test runner for all things JavaScript
+- [Prettier](https://prettier.io) for code formatting
