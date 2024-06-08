@@ -16,7 +16,7 @@
   "engines": {
     "node": ">=18"
   },
-  "name": "kitchen-sink",
+  "name": "otter-bills",
   "packageManager": "npm@10.7.0",
   "workspaces": [
     "apps/*",
