@@ -35,5 +35,29 @@ module.exports = {
   // add rules configurations here
   rules: {
     "import/no-default-export": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        selector: "typeLike",
+        format: ["PascalCase"],
+      },
+      {
+        selector: "enumMember",
+        format: ["UPPER_CASE"],
+      },
+      {
+        selector: "interface",
+        format: ["PascalCase"],
+        custom: {
+          regex: "^I[A-Z]",
+          match: true,
+        },
+      },
+    ],
+    "prefer-named-capture-group": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "react/jsx-sort-props": "off",
+    "unicorn/filename-case": "off",
   },
 };
