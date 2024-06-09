@@ -31,7 +31,4 @@ module.exports = {
       files: ["*.js?(x)", "*.ts?(x)"],
     },
   ],
-  rules: {
-    "@typescript-eslint/naming-convention": "off",
-  },
 };
