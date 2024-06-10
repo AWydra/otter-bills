@@ -1,0 +1,29 @@
+import type { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    userId: string;
+  }
+}
+
+export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies.jwt;
+
+  if (token) {
+    jwt.verify(
+      token,
+      process.env.JWT_SECRET!,
+      (err: jwt.VerifyErrors | null, decodedToken: any) => {
+        if (err) {
+          res.status(401).json({ error: 'Auth error' });
+        } else {
+          req.userId = decodedToken.id;
+          next();
+        }
+      },
+    );
+  } else {
+    res.status(401).json({ error: 'Auth error' });
+  }
+};
