@@ -27,7 +27,6 @@ function HistoryListItem({
   paidBy,
   avatars = [],
   refund,
-  preview,
 }: IProps): ReactElement {
   const navigate = useNavigate();
 
@@ -36,7 +35,7 @@ function HistoryListItem({
       <ListItemButton
         sx={styles.listItem_button}
         onClick={() => {
-          navigate(`${preview ? '' : RouteEnum.HISTORY}/${id}`);
+          navigate(`?itemId=${id}`);
         }}
       >
         <ListItemText

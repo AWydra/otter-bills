@@ -1,6 +1,6 @@
 import type { ReactElement, Ref } from 'react';
 import React, { useState, forwardRef, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -68,12 +68,12 @@ const data = {
 function ExpenseDetailsDialog() {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setOpen(Boolean(id));
-  }, [id]);
+    setOpen(Boolean(searchParams.get('itemId')));
+  }, [searchParams]);
 
   const handleClose = () => {
     navigate(-1);

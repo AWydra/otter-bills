@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Box, Button, Link as MuiLink, Typography } from '@mui/material';
 import ExpenseCard from 'components/molecules/ExpenseCard/ExpenseCard';
 import HistoryList from 'components/organisms/HistoryList/HistoryList';
-import ExpenseDetailsDialog from 'components/organisms/Dialogs/ExpenseDetailsDialog/ExpenseDetailsDialog';
 import { RouteEnum } from 'enums';
 import styles from './styles';
 
@@ -31,7 +30,6 @@ function Home(): ReactElement {
         Ostatnie operacje
       </Typography>
       <HistoryList preview />
-      <ExpenseDetailsDialog />
     </Box>
   );
 }
