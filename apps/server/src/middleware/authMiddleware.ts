@@ -1,24 +1,20 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import type { IDecodedToken } from 'types/auth';
+import type { IRequest } from 'types/express';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    userId: string;
-  }
-}
-
-export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+export const requireAuth = (req: IRequest, res: Response, next: NextFunction) => {
   const token = req.cookies.jwt;
 
   if (token) {
     jwt.verify(
       token,
       process.env.JWT_SECRET!,
-      (err: jwt.VerifyErrors | null, decodedToken: any) => {
+      (err: jwt.VerifyErrors | null, decodedToken: jwt.JwtPayload | string | undefined) => {
         if (err) {
           res.status(401).json({ error: 'Auth error' });
         } else {
-          req.userId = decodedToken.id;
+          req.userId = (decodedToken as IDecodedToken).id;
           next();
         }
       },

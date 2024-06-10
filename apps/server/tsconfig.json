@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "lib": ["ES2015"],
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "strict": false
   },
   "exclude": ["node_modules"],
   "include": ["."]

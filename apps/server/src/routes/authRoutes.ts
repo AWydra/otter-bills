@@ -4,8 +4,8 @@ import * as authController from '../controllers/authController';
 const router = Router();
 
 router
-  .post('/signup', authController.signup)
-  .post('/login', authController.login)
-  .get('/logout', authController.logout);
+  .post('/signup', authController.signUp)
+  .post('/login', authController.logIn)
+  .get('/logout', authController.logOut);
 
 export default router;

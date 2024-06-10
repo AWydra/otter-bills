@@ -41,6 +41,25 @@ module.exports = {
   ignorePatterns: ['.*.js', 'node_modules/', 'dist/'],
   // add rules configurations here
   rules: {
+    '@typescript-eslint/naming-convention': [
+      'warn',
+      {
+        selector: 'typeLike',
+        format: ['PascalCase'],
+      },
+      {
+        selector: 'enumMember',
+        format: ['UPPER_CASE'],
+      },
+      {
+        selector: 'interface',
+        format: ['PascalCase'],
+        custom: {
+          regex: '^I[A-Z]',
+          match: true,
+        },
+      },
+    ],
     'import/no-default-export': 'off',
     'import/no-named-as-default-member': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
@@ -49,5 +68,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'no-console': 'off',
     'unicorn/filename-case': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
 };
