@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import cors from 'cors';
 import authRoutes from 'routes/authRoutes';
 import { requireAuth } from 'middleware/authMiddleware';
 
@@ -11,6 +13,8 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan('dev'));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 if (!process.env.MONGODB_CONNECTION) {
   throw new Error('MongoDB connection string missing');
@@ -29,6 +33,6 @@ mongoose
     console.log(err);
   });
 
-app.use(authRoutes);
+app.use('/api', authRoutes);
 
 app.use(requireAuth);
