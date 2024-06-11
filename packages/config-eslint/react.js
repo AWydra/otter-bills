@@ -57,6 +57,7 @@ module.exports = {
     ],
     'prefer-named-capture-group': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
     'react/jsx-sort-props': 'off',
     'unicorn/filename-case': 'off',
     'react-hooks/exhaustive-deps': 'off',

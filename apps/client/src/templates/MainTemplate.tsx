@@ -11,6 +11,7 @@ import Navbar from 'components/organisms/Navbar/Navbar';
 import BottomNavigation from 'components/organisms/BottomNavigation/BottomNavigation';
 import { BillContextProvider } from 'contexts/BillContext';
 import ExpenseDetailsDialog from 'components/organisms/Dialogs/ExpenseDetailsDialog/ExpenseDetailsDialog';
+import { AuthContextProvider } from 'contexts/AuthContext';
 import ErrorBoundary from './ErrorBoundary';
 
 interface IProps {
@@ -21,18 +22,20 @@ function MainTemplate({ children }: IProps): ReactElement {
   return (
     <ErrorBoundary>
       <LocalizationProvider adapterLocale="pl" dateAdapter={AdapterDayjs}>
-        <ThemeProvider>
-          <CssBaseline />
-          <GlobalStyles />
-          <Navbar />
-          <Box display="flex" flexDirection="column" minHeight="calc(100vh - 56px)" pb={7}>
-            <BillContextProvider>
-              {children}
-              <ExpenseDetailsDialog />
-            </BillContextProvider>
-          </Box>
-          <BottomNavigation />
-        </ThemeProvider>
+        <AuthContextProvider>
+          <ThemeProvider>
+            <CssBaseline />
+            <GlobalStyles />
+            <Navbar />
+            <Box display="flex" flexDirection="column" minHeight="calc(100vh - 56px)" pb={7}>
+              <BillContextProvider>
+                {children}
+                <ExpenseDetailsDialog />
+              </BillContextProvider>
+            </Box>
+            <BottomNavigation />
+          </ThemeProvider>
+        </AuthContextProvider>
       </LocalizationProvider>
     </ErrorBoundary>
   );
