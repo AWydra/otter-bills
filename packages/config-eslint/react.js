@@ -59,6 +59,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     'react/jsx-sort-props': 'off',
+    'react/function-component-definition': 'off',
     'unicorn/filename-case': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'eslint-comments/require-description': 'off',
