@@ -112,7 +112,6 @@ function BillForm(): ReactElement {
               autoComplete="off"
               error={Boolean(errors.amount?.message)}
               helperText={errors.amount?.message}
-              id="outlined-basic"
               label="Kwota z rachunku"
               onChange={(ev) => {
                 const { value } = ev.target;

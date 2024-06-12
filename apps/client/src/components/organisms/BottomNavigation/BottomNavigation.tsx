@@ -11,7 +11,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import HistoryIcon from '@mui/icons-material/History';
 import { RouteEnum } from 'enums';
 
-const hideOnRoutes = [RouteEnum.LOGIN];
+const hideOnRoutes = [RouteEnum.LOGIN, RouteEnum.REGISTER];
 
 function BottomNavigation() {
   const location = useLocation();

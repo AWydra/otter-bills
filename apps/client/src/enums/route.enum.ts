@@ -6,5 +6,6 @@ export enum RouteEnum {
   PAYMENT = '/payment',
   HISTORY = '/history',
   LOGIN = '/login',
+  REGISTER = '/register',
   NOT_FOUND = '/404',
 }

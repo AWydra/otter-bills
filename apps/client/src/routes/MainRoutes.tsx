@@ -9,12 +9,14 @@ import History from 'views/History/History';
 import Login from 'views/Login/Login';
 import NotFound from 'views/NotFound/NotFound';
 import { RouteEnum } from 'enums';
+import Register from 'views/Register/Register';
 import { ProtectedRoutes } from './ProtectedRoutes';
 
 function MainRoutes(): ReactElement {
   return (
     <Routes>
       <Route path={RouteEnum.LOGIN} element={<Login />} />
+      <Route path={RouteEnum.REGISTER} element={<Register />} />
       <Route path={RouteEnum.NOT_FOUND} element={<NotFound />} />
       <Route
         path="*"

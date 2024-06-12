@@ -1,11 +1,13 @@
 import type { ReactElement } from 'react';
 import React from 'react';
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Button, Link as MuiLink, Stack, TextField, Typography } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import otterbills from 'assets/logo/otterbills.svg';
+import { Link } from 'react-router-dom';
+import { RouteEnum } from 'enums';
 
 interface IFormValues {
   email: string;
@@ -97,6 +99,16 @@ function Login(): ReactElement {
       >
         Zaloguj
       </Button>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ position: 'absolute', bottom: (theme) => theme.spacing(3) }}
+      >
+        Nie masz konta?{' '}
+        <MuiLink component={Link} to={RouteEnum.REGISTER} underline="none">
+          Zarejestruj się
+        </MuiLink>
+      </Typography>
     </Box>
   );
 }
