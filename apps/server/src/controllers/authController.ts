@@ -6,6 +6,7 @@ import User from 'models/User';
 import type { IRequest } from 'types/express';
 import type { IDecodedToken, ILogInRequest, ISignUpRequest } from 'types/auth';
 import type { IUserModel } from 'types/models';
+import { returnUser } from 'utils/api';
 
 interface IError {
   code: number;
@@ -34,14 +35,40 @@ const createToken = (id: Types.ObjectId) => {
   return jwt.sign({ id }, process.env.JWT_SECRET!);
 };
 
+export const checkCredentials = (req: IRequest, res: Response) => {
+  const token = req.cookies.jwt;
+
+  if (token) {
+    jwt.verify(
+      token,
+      process.env.JWT_SECRET!,
+      async (err: jwt.VerifyErrors | null, decodedToken: jwt.JwtPayload | string | undefined) => {
+        if (err) {
+          return res.status(400).json({ error: 'Invalid token' });
+        }
+
+        const user = await User.findById<IUserModel>((decodedToken as IDecodedToken).id);
+
+        if (!user) {
+          return res.status(400).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json(returnUser(user));
+      },
+    );
+  } else {
+    res.status(400).json({ error: 'Invalid token' });
+  }
+};
+
 export const signUp = async (req: ISignUpRequest, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    const user = (await User.create({ email, password })) as IDecodedToken;
+    const user = (await User.create({ email, password })) as IUserModel;
     const token = createToken(user.id);
     res.cookie('jwt', token, { httpOnly: true });
-    res.status(201).json({ user: user.id });
+    res.status(201).json(returnUser(user));
   } catch (err: unknown) {
     const typedErr = err as IError;
     const error = handleErrors(typedErr);
