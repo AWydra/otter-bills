@@ -3,6 +3,14 @@ import validator from 'validator';
 import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Imię jest wymagane'],
+  },
+  surname: {
+    type: String,
+    required: [true, 'Nazwisko jest wymagane'],
+  },
   email: {
     type: String,
     required: [true, 'Email jest wymagany'],

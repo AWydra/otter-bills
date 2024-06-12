@@ -70,5 +70,6 @@ module.exports = {
     'unicorn/filename-case': 'off',
     '@typescript-eslint/no-misused-promises': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    'eslint-comments/require-description': 'off',
   },
 };

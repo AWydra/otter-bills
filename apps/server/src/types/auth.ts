@@ -1,4 +1,5 @@
 import type { Types } from 'mongoose';
+import type { ISignUpRequestData } from '@repo/types';
 import type { IRequest } from './express';
 
 export interface IDecodedToken {
@@ -6,10 +7,7 @@ export interface IDecodedToken {
 }
 
 export interface ISignUpRequest extends IRequest {
-  body: {
-    email: string;
-    password: string;
-  };
+  body: ISignUpRequestData;
 }
 
 export interface ILogInRequest extends IRequest {
