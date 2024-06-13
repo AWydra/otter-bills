@@ -6,7 +6,7 @@ const useApi = () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    baseURL: '//localhost:3001/api',
+    baseURL: `//${window.location.hostname}:3001/api`,
     withCredentials: true,
   });
 

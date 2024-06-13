@@ -95,6 +95,15 @@ export const signUp = async (req: ISignUpRequest, res: Response) => {
   }
 };
 
+export const signInSchema = yup.object().shape({
+  email: yup.string().required('Wymagane').min(3, 'Minimum 3 znaki'),
+  password: yup
+    .string()
+    .required('Wymagane')
+    .min(8, 'Minimum 8 znaków')
+    .max(30, 'Maksymalnie 30 znaków'),
+});
+
 export const signIn = async (req: ILogInRequest, res: Response) => {
   const { email, password } = req.body;
 
@@ -105,7 +114,7 @@ export const signIn = async (req: ILogInRequest, res: Response) => {
     if (auth) {
       const token = createToken(user.id);
       res.cookie('jwt', token, { httpOnly: true });
-      res.status(200).json({ user: user.id });
+      res.status(200).json(returnUser(user));
       return;
     }
     res.status(400).json({ message: 'Błędne dane' });

@@ -6,13 +6,13 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import otterbills from 'assets/logo/otterbills.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RouteEnum } from 'enums';
-
-interface IFormValues {
-  email: string;
-  password: string;
-}
+import { useAuthServices } from 'hooks/useAuthServices';
+import LoadingButton from '@mui/lab/LoadingButton';
+import type { IAxiosErrorData, ISignInRequestData } from '@repo/types';
+import useAuthContext from 'hooks/useAuthContext';
+import { isAxiosError } from 'axios';
 
 const schema = yup.object().shape({
   email: yup.string().required('Wymagane').min(3, 'Minimum 3 znaki'),
@@ -28,12 +28,35 @@ function Login(): ReactElement {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormValues>({
+    setError,
+    setFocus,
+  } = useForm<ISignInRequestData>({
     resolver: yupResolver(schema),
   });
+  const { loading, signIn } = useAuthServices();
+  const { authenticate } = useAuthContext();
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<IFormValues> = (data) => {
-    console.log('data', data);
+  const onSubmit: SubmitHandler<ISignInRequestData> = async (data) => {
+    try {
+      const response = await signIn(data);
+      authenticate(response.data);
+      navigate(RouteEnum.HOME);
+    } catch (error: unknown) {
+      if (isAxiosError<IAxiosErrorData<keyof ISignInRequestData>>(error)) {
+        const { response } = error;
+        if (response?.data.field) {
+          setError(response.data.field, {
+            message: response.data.message,
+          });
+          setFocus(response.data.field);
+        } else {
+          // show error
+        }
+      }
+      console.log('++ error', error);
+      // show error
+    }
   };
 
   return (
@@ -88,17 +111,18 @@ function Login(): ReactElement {
           )}
         />
       </Stack>
-      <Button
+      <LoadingButton
         variant="contained"
         size="large"
         type="submit"
+        loading={loading}
         sx={{
           width: '100%',
           margin: (theme) => theme.spacing(4, 0, 3),
         }}
       >
         Zaloguj
-      </Button>
+      </LoadingButton>
       <Typography
         variant="body2"
         color="text.secondary"

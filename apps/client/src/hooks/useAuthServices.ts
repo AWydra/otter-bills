@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ISignUpRequestData, IUserResponseData } from '@repo/types';
+import type { ISignInRequestData, ISignUpRequestData, IUserResponseData } from '@repo/types';
 import useApi from './useApi';
 
 export const useAuthServices = () => {
@@ -24,9 +24,19 @@ export const useAuthServices = () => {
     }
   };
 
+  const signIn = async (data: ISignInRequestData) => {
+    try {
+      setLoading(true);
+      return await apiClient.post<IUserResponseData>('/signin', data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     checkCredentials,
     signUp,
+    signIn,
   };
 };

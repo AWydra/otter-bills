@@ -18,3 +18,8 @@ export interface IUserResponseData {
   surname: string;
   email: string;
 }
+
+export interface ISignInRequestData {
+  email: string;
+  password: string;
+}
