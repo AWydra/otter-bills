@@ -133,14 +133,6 @@ function BillForm(): ReactElement {
             <MobileDatePicker
               {...field}
               value={field.value ? dayjs(field.value) : null}
-              // cancelText="Anuluj"
-              // componentsProps={{
-              //   switchViewButton: {
-              //     sx: {
-              //       display: "none",
-              //     },
-              //   },
-              // }}
               disableOpenPicker
               label="Data zakupu"
               maxDate={dayjs()}
@@ -152,16 +144,12 @@ function BillForm(): ReactElement {
                     },
                   },
                 },
+                textField: {
+                  error: Boolean(errors.date?.message),
+                  helperText: errors.date?.message,
+                },
               }}
-              // renderInput={(params) => (
-              //   <TextField
-              //     {...params}
-              //     error={Boolean(errors.date?.message)}
-              //     helperText={errors.date?.message}
-              //   />
-              // )}
               minDate={dayjs().subtract(2, 'months')}
-              // okText="Zatwierdź"
               onChange={(newValue) => {
                 if (!newValue) return;
                 setValue('date', newValue.toISOString(), {

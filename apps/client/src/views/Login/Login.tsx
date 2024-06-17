@@ -13,6 +13,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import type { IAxiosErrorData, ISignInRequestData } from '@repo/types';
 import useAuthContext from 'hooks/useAuthContext';
 import { isAxiosError } from 'axios';
+import useToastContext from 'hooks/useToastContext';
 
 const schema = yup.object().shape({
   email: yup.string().required('Wymagane').min(3, 'Minimum 3 znaki'),
@@ -35,6 +36,7 @@ function Login(): ReactElement {
   });
   const { loading, signIn } = useAuthServices();
   const { authenticate } = useAuthContext();
+  const toast = useToastContext();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<ISignInRequestData> = async (data) => {
@@ -51,11 +53,11 @@ function Login(): ReactElement {
           });
           setFocus(response.data.field);
         } else {
-          // show error
+          toast.error(response?.data.message || 'Wystąpił błąd');
         }
+      } else {
+        toast.error(error instanceof Error ? error.message : 'Wystąpił błąd');
       }
-      console.log('++ error', error);
-      // show error
     }
   };
 
