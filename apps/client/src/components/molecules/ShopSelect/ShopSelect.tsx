@@ -16,9 +16,9 @@ interface IProps {
 }
 
 const stores: readonly IShopOption[] = [
-  { name: 'Biedronka', id: 1 },
-  { name: 'Lidl', id: 2 },
-  { name: 'Netto', id: 3 },
+  { name: 'Biedronka', id: '1' },
+  { name: 'Lidl', id: '2' },
+  { name: 'Netto', id: '3' },
 ];
 
 const filter = createFilterOptions<IShopOption>();

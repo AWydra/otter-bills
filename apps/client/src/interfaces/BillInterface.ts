@@ -3,7 +3,7 @@ import type { IPayersResponse } from './ApiInterface';
 export interface IShopOption {
   inputValue?: string;
   name: string;
-  id?: number | null;
+  id?: string | null;
 }
 
 export interface IPayers extends IPayersResponse {

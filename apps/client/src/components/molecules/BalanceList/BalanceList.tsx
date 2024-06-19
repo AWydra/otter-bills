@@ -19,19 +19,19 @@ import { RouteEnum } from 'enums';
 
 const data = [
   {
-    id: 0,
+    id: '0',
     name: 'Patrycja Kubica',
     amount: '12,42',
     avatar: 'https://i.pravatar.cc/300?img=1',
   },
   {
-    id: 1,
+    id: '1',
     name: 'Goha',
     amount: '82,39',
     avatar: 'https://i.pravatar.cc/300?img=2',
   },
   {
-    id: 2,
+    id: '2',
     name: 'Ktoś inny',
     amount: '41,82',
     avatar: 'https://i.pravatar.cc/300?img=3',

@@ -41,7 +41,7 @@ function ExpenseForm(): ReactElement {
             .required(),
           splitsReceipt: yup.boolean().required(),
           error: yup.boolean().required(),
-          id: yup.number().required(),
+          id: yup.string().required(),
           name: yup.string().required(),
           avatar: yup.string().required(),
         }),

@@ -9,7 +9,7 @@ import styles from './styles';
 
 const data = [
   {
-    id: 0,
+    id: '0',
     label: 'Zwrot kosztów',
     amount: 20.23,
     paidBy: 'Patrycja',
@@ -17,7 +17,7 @@ const data = [
     refund: true,
   },
   {
-    id: 1,
+    id: '1',
     label: 'Zwrot kosztów',
     amount: -500,
     paidBy: 'Goha',
@@ -25,7 +25,7 @@ const data = [
     refund: true,
   },
   {
-    id: 2,
+    id: '2',
     label: 'Biedronka',
     amount: 52.39,
     paidBy: 'Ja',
@@ -37,7 +37,7 @@ const data = [
     refund: false,
   },
   {
-    id: 3,
+    id: '3',
     label: 'Lidl',
     amount: 32.99,
     paidBy: 'Patrycja',
@@ -48,7 +48,7 @@ const data = [
     refund: false,
   },
   {
-    id: 4,
+    id: '4',
     label: 'Zwrot kosztów',
     amount: 20.23,
     paidBy: 'Patrycja',
@@ -56,7 +56,7 @@ const data = [
     refund: true,
   },
   {
-    id: 5,
+    id: '5',
     label: 'Zwrot kosztów',
     amount: -500,
     paidBy: 'Goha',
@@ -64,7 +64,7 @@ const data = [
     refund: true,
   },
   {
-    id: 6,
+    id: '6',
     label: 'Biedronka',
     amount: 52.39,
     paidBy: 'Ja',
@@ -76,7 +76,7 @@ const data = [
     refund: false,
   },
   {
-    id: 7,
+    id: '7',
     label: 'Lidl',
     amount: 32.99,
     paidBy: 'Patrycja',

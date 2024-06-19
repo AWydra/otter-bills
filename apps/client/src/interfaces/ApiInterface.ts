@@ -1,5 +1,5 @@
 export interface IHistoryResponse {
-  id: number;
+  id: string;
   label: string;
   amount: number;
   paidBy: string;
@@ -8,7 +8,7 @@ export interface IHistoryResponse {
 }
 
 export interface IPayersResponse {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
 }
@@ -18,14 +18,14 @@ export interface IBalanceResponse extends IPayersResponse {
 }
 
 export interface IExpenseDetails {
-  id: number;
+  id: string;
   name: string;
   avatar: string;
   amount: string;
 }
 
 export interface IExpenseDetailsResponse {
-  id: number;
+  id: string;
   image?: string;
   shop: string;
   amount: string;

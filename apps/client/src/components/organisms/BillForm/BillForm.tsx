@@ -26,7 +26,7 @@ interface IFormValues {
 const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
   shop: yup.object().shape({
     name: yup.string().required('Wymagane'),
-    id: yup.number().nullable(),
+    id: yup.string().nullable(),
   }),
   amount: yup
     .string()
