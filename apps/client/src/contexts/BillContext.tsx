@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { ImageListType } from 'react-images-uploading';
 import dayjs from 'dayjs';
 import type { IShopOption, IPayers } from 'interfaces';
+import useAuthContext from 'hooks/useAuthContext';
 
 interface IReceiptSplit {
-  id: number;
+  id: string;
   splitsReceipt: boolean;
 }
 
@@ -63,6 +64,22 @@ export function BillContextProvider({ children }: IProps) {
   const [description, setDescription] = useState<string>(defaultValues.description);
   const [images, setImages] = useState<ImageListType>(defaultValues.images);
   const [payers, setPayers] = useState<IPayers[]>(defaultValues.payers);
+
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    if (!user) return;
+
+    const currentUser: IPayers = {
+      id: user.id,
+      name: `${user.name} ${user.surname}`,
+      avatar: '',
+      amount: '',
+      splitsReceipt: false,
+    };
+
+    setPayers([currentUser]);
+  }, [user]);
 
   return (
     <BillContext.Provider
