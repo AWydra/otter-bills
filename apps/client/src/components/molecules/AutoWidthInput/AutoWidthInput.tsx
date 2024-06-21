@@ -39,7 +39,6 @@ const AutoWidthInput = forwardRef(
           onChange={(ev) => {
             if (onChange) onChange(ev);
           }}
-          placeholder="0"
         />
       </>
     );

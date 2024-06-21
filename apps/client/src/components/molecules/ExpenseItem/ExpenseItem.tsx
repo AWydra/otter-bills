@@ -22,7 +22,7 @@ interface IProps {
   onBlur: () => void;
   onChange: (...event: any[]) => void;
   value: string;
-  error: boolean;
+  error?: boolean;
 }
 
 function ExpenseItem({
@@ -32,7 +32,7 @@ function ExpenseItem({
   onBlur,
   onChange,
   value,
-  error,
+  error = false,
 }: IProps): ReactElement {
   const [open, setOpen] = useState(false);
   const [focused, setFocused] = useState(false);
@@ -99,12 +99,13 @@ function ExpenseItem({
                   onChange={onChange}
                   onFocus={onFocus}
                   onBlur={handleBlur}
+                  placeholder="0"
                   sx={{
                     '& input': {
                       maxWidth: (theme) => theme.spacing(9.5),
                       textAlign: 'right',
-                      pl: (theme) => theme.spacing(0.5),
-                      pr: (theme) => theme.spacing(4.5),
+                      pl: 0.5,
+                      pr: 4.5,
                       zIndex: 1,
                       color: (theme) => (error ? theme.palette.error.main : 'inherit'),
                     },

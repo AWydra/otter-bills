@@ -12,49 +12,51 @@ import { useBillContext } from 'contexts/BillContext';
 import { amountToNumber, formatAmount } from 'utils';
 import type { IPayers } from 'interfaces';
 import { RouteEnum } from 'enums';
-
-interface IPayerError extends IPayers {
-  error?: boolean;
-}
+import useAuthContext from 'hooks/useAuthContext';
 
 interface IFormValues {
-  payers: IPayerError[];
+  payers: IPayers[];
 }
+
+const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
+  payers: yup
+    .array()
+    .of(
+      yup.object().shape({
+        amount: yup
+          .string()
+          .matches(/^([0-9]{1,}([,.][0-9]{1,2})?)?$/, 'Wprowadź poprawną kwotę')
+          .required(),
+        splitsReceipt: yup.boolean().required(),
+        id: yup.string().required(),
+        name: yup.string().required(),
+        avatar: yup.string().required(),
+      }),
+    )
+    .required(),
+});
 
 function ExpenseForm(): ReactElement {
   const { payers, setPayers, amount } = useBillContext();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
 
-  const payersList: IPayerError[] = payers.map((payer) => ({
+  const payersList: IPayers[] = payers.map((payer) => ({
     ...payer,
-    error: false,
   }));
 
-  const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
-    payers: yup
-      .array()
-      .of(
-        yup.object().shape({
-          amount: yup
-            .string()
-            .matches(/^([0-9]{1,}([,.][0-9]{1,2})?)?$/, 'Wprowadź poprawną kwotę')
-            .required(),
-          splitsReceipt: yup.boolean().required(),
-          error: yup.boolean().required(),
-          id: yup.string().required(),
-          name: yup.string().required(),
-          avatar: yup.string().required(),
-        }),
-      )
-      .required(),
-  });
-
-  const { control, handleSubmit } = useForm<IFormValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormValues>({
     resolver: yupResolver(schema),
     defaultValues: {
       payers: payersList,
     },
   });
+
+  console.log('errors', errors);
 
   const { fields, update } = useFieldArray({
     control,
@@ -62,30 +64,24 @@ function ExpenseForm(): ReactElement {
     keyName: 'key',
   });
 
-  const formatData = (formPayers: IPayerError[]): IPayers[] =>
+  const formatData = (formPayers: IPayers[]): IPayers[] =>
     formPayers.map((payer) => {
-      delete payer.error;
       payer.amount = formatAmount(payer.amount);
       return payer;
     });
 
-  const checkValidity = (value: string, index: number): boolean => {
+  const checkValidity = (value: string): boolean => {
     if (value) {
       if (value.length > 8) return false;
       const pattern = /^[0-9,.]+$/;
       if (!pattern.test(value)) {
         return false;
       }
-      const valid = /^[0-9]{1,}([,.][0-9]{1,2})?$/.test(value);
-      update(index, {
-        ...fields[index],
-        error: !valid,
-      });
     }
     return true;
   };
 
-  const countTotalAmount = (formPayers: IPayerError[]) => {
+  const countTotalAmount = (formPayers: IPayers[]) => {
     return formPayers
       .reduce((partialSum, payer) => {
         const numberAmount = amountToNumber(payer.amount);
@@ -94,7 +90,7 @@ function ExpenseForm(): ReactElement {
       .toFixed(2);
   };
 
-  const checkTotalAmount = (formPayers: IPayerError[]) => {
+  const checkTotalAmount = (formPayers: IPayers[]) => {
     const totalAmount = countTotalAmount(formPayers);
 
     if (amountToNumber(totalAmount) > amountToNumber(amount)) {
@@ -114,10 +110,13 @@ function ExpenseForm(): ReactElement {
   };
 
   const onSubmit: SubmitHandler<IFormValues> = (data) => {
-    const hasError = data.payers.some((el) => el.error);
+    console.log('data', data);
     const isTotalAmountValid = checkTotalAmount(data.payers);
 
-    if (hasError || !isTotalAmountValid) return;
+    if (!isTotalAmountValid) {
+      console.error('Total amount is invalid');
+      return;
+    }
 
     const formatted = formatData(data.payers);
 
@@ -154,7 +153,7 @@ function ExpenseForm(): ReactElement {
                     onBlur={field.onBlur}
                     onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
                       const value = ev.target.value;
-                      const isValid = checkValidity(value, index);
+                      const isValid = checkValidity(value);
                       if (isValid) {
                         field.onChange(ev);
                         update(index, {
@@ -164,7 +163,6 @@ function ExpenseForm(): ReactElement {
                       }
                     }}
                     value={field.value || ''}
-                    error={fields[index].error || false}
                   />
                 );
               }}
@@ -183,12 +181,15 @@ function ExpenseForm(): ReactElement {
             {countTotalAmount(fields)} PLN
           </Typography>
         </Typography>
-        <Button onClick={handleSplitBill} variant="outlined">
-          Podziel rachunek między osoby
-        </Button>
-        <Button type="submit" variant="contained">
-          Wyślij
-        </Button>
+        {fields.find(({ id }) => id === user?.id)?.amount ? (
+          <Button onClick={handleSplitBill} variant="outlined">
+            Podziel rachunek między osoby
+          </Button>
+        ) : (
+          <Button type="submit" variant="contained">
+            Wyślij
+          </Button>
+        )}
       </Stack>
     </Box>
   );

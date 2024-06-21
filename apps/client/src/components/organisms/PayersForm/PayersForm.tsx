@@ -122,7 +122,7 @@ function PayersForm(): ReactElement {
     if (isInArray) {
       setChecked((prevState) => prevState.filter((el) => el.id !== payer.id));
     } else {
-      setChecked((prevState) => [...prevState, payer].sort((a, b) => a.id.localeCompare(b.id)));
+      setChecked((prevState) => [...prevState, payer]);
     }
   };
 
