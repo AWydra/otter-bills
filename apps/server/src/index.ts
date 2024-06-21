@@ -6,8 +6,6 @@ import cors from 'cors';
 import authRoutes from 'routes/authRoutes';
 import { requireAuth } from 'middleware/authMiddleware';
 
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
-
 const app = express();
 const port = process.env.PORT || 3001;
 
