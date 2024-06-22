@@ -1,7 +1,5 @@
-import type { Types } from 'mongoose';
-
 export interface IUserModel {
-  id: Types.ObjectId;
+  id: number;
   name: string;
   surname: string;
   email: string;

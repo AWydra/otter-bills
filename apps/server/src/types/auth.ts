@@ -1,9 +1,8 @@
-import type { Types } from 'mongoose';
 import type { ISignUpRequestData } from '@repo/types';
 import type { IRequest } from './express';
 
 export interface IDecodedToken {
-  id: Types.ObjectId;
+  id: number;
 }
 
 export interface ISignUpRequest extends IRequest {

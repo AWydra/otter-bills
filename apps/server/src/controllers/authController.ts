@@ -1,41 +1,15 @@
 import type { Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import type { Types } from 'mongoose';
 import * as yup from 'yup';
-import User from 'models/User';
 import type { IRequest } from 'types/express';
 import type { IDecodedToken, ILogInRequest, ISignUpRequest } from 'types/auth';
 import type { IUserModel } from 'types/models';
 import { returnUser } from 'utils/api';
+import sql from 'db';
+import type { PostgresError } from 'postgres';
 
-interface IError {
-  code: number;
-  message: string;
-  errors: Record<string, { path: string; message: string }>[];
-}
-
-const handleErrors = (err: IError) => {
-  const error = {
-    field: '',
-    message: '',
-  };
-
-  if (err.code === 11000) {
-    error.field = 'email';
-    error.message = 'Konto z podanym adresem email już istnieje';
-  }
-
-  if (err.message.includes('user validation failed')) {
-    const dbError = Object.values(err.errors)[0];
-    error.field = dbError.properties.path;
-    error.message = dbError.properties.message;
-  }
-
-  return error;
-};
-
-const createToken = (id: Types.ObjectId) => {
+const createToken = (id: number) => {
   return jwt.sign({ id }, process.env.JWT_SECRET!);
 };
 
@@ -51,7 +25,8 @@ export const checkCredentials = (req: IRequest, res: Response) => {
           return res.status(400).json({ message: 'Invalid token' });
         }
 
-        const user = await User.findById<IUserModel>((decodedToken as IDecodedToken).id);
+        const [user]: [IUserModel?] =
+          await sql`SELECT * FROM users WHERE id = ${(decodedToken as IDecodedToken).id}`;
 
         if (!user) {
           return res.status(400).json({ message: 'User not found' });
@@ -84,14 +59,20 @@ export const signUp = async (req: ISignUpRequest, res: Response) => {
   const { name, surname, email, password } = req.body;
 
   try {
-    const user = (await User.create({ name, surname, email, password })) as IUserModel;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const [user]: [IUserModel] = await sql`
+      INSERT INTO users (name, surname, email, password) 
+      VALUES (${name}, ${surname}, ${email}, ${hashedPassword})
+      returning id, name, surname, email`;
+
     const token = createToken(user.id);
     res.cookie('jwt', token, { httpOnly: true });
     res.status(201).json(returnUser(user));
   } catch (err: unknown) {
-    const typedErr = err as IError;
-    const error = handleErrors(typedErr);
-    res.status(400).json(error);
+    const typedError = err as PostgresError;
+    typedError.code === '23505'
+      ? res.status(400).json({ field: 'email', message: 'Użytkownik już istnieje' })
+      : res.status(500).json({ message: 'Błąd serwera' });
   }
 };
 
@@ -107,7 +88,7 @@ export const signInSchema = yup.object().shape({
 export const signIn = async (req: ILogInRequest, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne<IUserModel>({ email });
+  const [user]: [IUserModel?] = await sql`SELECT * FROM users WHERE email = ${email}`;
 
   if (user && password) {
     const auth = await bcrypt.compare(password, user.password);
