@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import authRoutes from 'routes/authRoutes';
+import storeRoutes from 'routes/storeRoutes';
 import { requireAuth } from 'middleware/authMiddleware';
 
 const app = express();
@@ -22,3 +23,5 @@ app.listen(port, () => {
 app.use('/api/auth', authRoutes);
 
 app.use(requireAuth);
+
+app.use('/api/stores', storeRoutes);
