@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 export interface IAxiosErrorData<T = string> {
   field?: T;
   message: string;
