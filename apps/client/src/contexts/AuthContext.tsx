@@ -1,5 +1,5 @@
 import type { IUserResponseData } from '@repo/types';
-import { useAuthServices } from 'hooks/useAuthServices';
+import { useAuthServices } from 'services/useAuthServices';
 import type { ReactNode } from 'react';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ISignInRequestData, ISignUpRequestData, IUserResponseData } from '@repo/types';
-import useApi from './useApi';
+import useApi from '../hooks/useApi';
 
 export const useAuthServices = () => {
   const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ export const useAuthServices = () => {
   const checkCredentials = async () => {
     try {
       setLoading(true);
-      return await apiClient.post<IUserResponseData>('/check-credentials');
+      return await apiClient.post<IUserResponseData>('/auth/check-credentials');
     } finally {
       setLoading(false);
     }
@@ -18,7 +18,7 @@ export const useAuthServices = () => {
   const signUp = async (data: ISignUpRequestData) => {
     try {
       setLoading(true);
-      return await apiClient.post<IUserResponseData>('/signup', data);
+      return await apiClient.post<IUserResponseData>('/auth/signup', data);
     } finally {
       setLoading(false);
     }
@@ -27,7 +27,7 @@ export const useAuthServices = () => {
   const signIn = async (data: ISignInRequestData) => {
     try {
       setLoading(true);
-      return await apiClient.post<IUserResponseData>('/signin', data);
+      return await apiClient.post<IUserResponseData>('/auth/signin', data);
     } finally {
       setLoading(false);
     }

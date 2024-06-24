@@ -8,7 +8,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Heading from 'components/molecules/Heading/Heading';
 import { yupResolver } from '@hookform/resolvers/yup';
 import type { IAxiosErrorData, ISignUpRequestData } from '@repo/types';
-import { useAuthServices } from 'hooks/useAuthServices';
+import { useAuthServices } from 'services/useAuthServices';
 import useAuthContext from 'hooks/useAuthContext';
 import { RouteEnum } from 'enums';
 import { useNavigate } from 'react-router-dom';

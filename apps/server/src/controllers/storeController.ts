@@ -1,7 +1,7 @@
 import sql from 'db';
 import type { Response } from 'express';
 import type { IRequest } from 'types/express';
-import type { IStore } from 'types/stores';
+import type { IStore } from '@repo/types';
 
 export const getStores = async (req: IRequest, res: Response) => {
   const stores = await sql<IStore[]>`SELECT id, name FROM stores`;
