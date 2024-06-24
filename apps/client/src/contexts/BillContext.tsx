@@ -33,7 +33,7 @@ const contextError = () => {
 const defaultValues: IBillContext = {
   shop: {
     name: '',
-    id: null,
+    id: -1,
   },
   setShop: contextError,
   amount: '',

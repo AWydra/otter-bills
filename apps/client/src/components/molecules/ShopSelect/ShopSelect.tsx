@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { ReactElement } from 'react';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import type { UseFormSetValue } from 'react-hook-form';
-import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
+import { Autocomplete, CircularProgress, TextField, createFilterOptions } from '@mui/material';
 import type { IShopOption } from 'interfaces';
+import { useStoreServices } from 'services/useStoreServices';
 
 interface IProps {
   value: IShopOption | null;
@@ -15,12 +16,6 @@ interface IProps {
   };
 }
 
-const stores: readonly IShopOption[] = [
-  { name: 'Biedronka', id: '1' },
-  { name: 'Lidl', id: '2' },
-  { name: 'Netto', id: '3' },
-];
-
 const filter = createFilterOptions<IShopOption>();
 
 const ShopSelect = forwardRef(
@@ -28,6 +23,19 @@ const ShopSelect = forwardRef(
     const setShop = (shop: IShopOption | null) => {
       onChange('shop', shop, { shouldValidate: true });
     };
+    const { getStores, loading } = useStoreServices();
+    const [shops, setShops] = useState<IShopOption[]>([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        const response = await getStores();
+        const { stores } = response.data;
+        setShops(stores);
+      };
+
+      fetchData();
+    }, []);
+
     return (
       <Autocomplete
         ref={ref}
@@ -35,14 +43,17 @@ const ShopSelect = forwardRef(
         onChange={(event, newValue) => {
           if (typeof newValue === 'string') {
             setShop({
+              id: -1,
               name: newValue,
             });
           } else if (newValue === null) {
             setShop({
+              id: -1,
               name: '',
             });
           } else if (newValue.inputValue) {
             setShop({
+              id: -1,
               name: newValue.inputValue,
             });
           } else {
@@ -58,6 +69,7 @@ const ShopSelect = forwardRef(
           if (inputValue !== '' && !isExisting) {
             filtered.push({
               inputValue,
+              id: -1,
               name: `Dodaj "${inputValue}"`,
             });
           }
@@ -66,7 +78,7 @@ const ShopSelect = forwardRef(
         }}
         blurOnSelect
         clearOnBlur
-        options={stores}
+        options={shops}
         getOptionLabel={(option) => {
           if (typeof option === 'string') {
             return option;
@@ -87,8 +99,18 @@ const ShopSelect = forwardRef(
             {...inputProps}
             label="Wybierz sklep"
             placeholder="Wybierz z listy lub dodaj nowy"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
           />
         )}
+        disabled={loading}
         {...props}
       />
     );
