@@ -17,7 +17,7 @@ import ExpenseDialog from 'components/organisms/Dialogs/ExpenseDialog/ExpenseDia
 
 interface IProps {
   payerName: string;
-  avatarUrl: string;
+  avatarUrl?: string;
   name: string;
   onBlur: () => void;
   onChange: (...event: any[]) => void;

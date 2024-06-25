@@ -1,5 +1,5 @@
 export interface IHistoryResponse {
-  id: string;
+  id: number;
   label: string;
   amount: number;
   paidBy: string;
@@ -7,25 +7,25 @@ export interface IHistoryResponse {
   refund: boolean;
 }
 
-export interface IPayersResponse {
-  id: string;
+export interface IPayerResponse {
+  id: number;
   name: string;
   avatar: string;
 }
 
-export interface IBalanceResponse extends IPayersResponse {
+export interface IBalanceResponse extends IPayerResponse {
   amount: string;
 }
 
 export interface IExpenseDetails {
-  id: string;
+  id: number;
   name: string;
   avatar: string;
   amount: string;
 }
 
 export interface IExpenseDetailsResponse {
-  id: string;
+  id: number;
   image?: string;
   shop: string;
   amount: string;

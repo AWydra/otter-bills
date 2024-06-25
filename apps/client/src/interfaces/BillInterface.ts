@@ -1,11 +1,11 @@
 import type { IStore } from '@repo/types';
-import type { IPayersResponse } from './ApiInterface';
+import type { IPayerResponse } from './ApiInterface';
 
 export interface IShopOption extends IStore {
   inputValue?: string;
 }
 
-export interface IPayers extends IPayersResponse {
+export interface IPayer extends IPayerResponse {
   amount: string;
   splitsReceipt: boolean;
 }

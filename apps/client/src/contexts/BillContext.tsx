@@ -2,11 +2,12 @@ import type { ReactNode } from 'react';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { ImageListType } from 'react-images-uploading';
 import dayjs from 'dayjs';
-import type { IShopOption, IPayers } from 'interfaces';
+import type { IShopOption } from 'interfaces';
 import useAuthContext from 'hooks/useAuthContext';
+import type { ICreateBillRequestData, IPayer } from '@repo/types';
 
 interface IReceiptSplit {
-  id: string;
+  id: number;
   splitsReceipt: boolean;
 }
 
@@ -21,9 +22,10 @@ interface IBillContext {
   setDescription: (description: string) => void;
   images: ImageListType;
   setImages: (images: ImageListType) => void;
-  payers: IPayers[];
-  setPayers: (payers: IPayers[]) => void;
+  payers: IPayer[];
+  setPayers: (payers: IPayer[]) => void;
   splitReceipt: (splits: IReceiptSplit) => void;
+  generateBillData: () => ICreateBillRequestData;
 }
 
 const contextError = () => {
@@ -47,6 +49,7 @@ const defaultValues: IBillContext = {
   payers: [],
   setPayers: contextError,
   splitReceipt: contextError,
+  generateBillData: contextError,
 };
 
 export const BillContext = createContext<IBillContext>(defaultValues);
@@ -63,14 +66,14 @@ export function BillContextProvider({ children }: IProps) {
   const [date, setDate] = useState<string>(defaultValues.date);
   const [description, setDescription] = useState<string>(defaultValues.description);
   const [images, setImages] = useState<ImageListType>(defaultValues.images);
-  const [payers, setPayers] = useState<IPayers[]>(defaultValues.payers);
+  const [payers, setPayers] = useState<IPayer[]>(defaultValues.payers);
 
   const { user } = useAuthContext();
 
   useEffect(() => {
     if (!user) return;
 
-    const currentUser: IPayers = {
+    const currentUser: IPayer = {
       id: user.id,
       name: `${user.name} ${user.surname}`,
       avatar: '',
@@ -80,6 +83,15 @@ export function BillContextProvider({ children }: IProps) {
 
     setPayers([currentUser]);
   }, [user]);
+
+  const generateBillData = (): ICreateBillRequestData => ({
+    shop,
+    amount,
+    date,
+    description,
+    image: images[0] as File,
+    payers,
+  });
 
   return (
     <BillContext.Provider
@@ -105,6 +117,7 @@ export function BillContextProvider({ children }: IProps) {
           });
           setPayers(modifiedPayers);
         },
+        generateBillData,
       }}
     >
       {children}

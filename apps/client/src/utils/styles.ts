@@ -10,7 +10,7 @@ export const spreadSx = (...sx: SxProps<Theme>[]) => {
       arr.push(styles);
     }
   });
-  return arr;
+  return arr as SxProps<Theme>;
 };
 
 export const styleCondition = <T, U>(condition: boolean, ifTrue: T, ifFalse: U) => {

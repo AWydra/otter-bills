@@ -36,7 +36,7 @@ const Transition = forwardRef(
 Transition.displayName = 'Transition';
 
 const data = {
-  id: '2',
+  id: 2,
   image: 'https://www.wykop.pl/cdn/c3201142/comment_IZgatIRmzImVcgne4k04732jU8JqNYvu.jpg',
   shop: 'Biedronka',
   amount: '53,92',
@@ -45,19 +45,19 @@ const data = {
     'Tutaj można coś wpisać konkretnego jak np. nazwę sprzętu, dzięki czemu paragon się nie zgubi',
   payers: [
     {
-      id: '1',
+      id: 1,
       name: 'Kyle Hicks',
       avatar: 'https://i.pravatar.cc/300?img=1',
       amount: '12,53',
     },
     {
-      id: '2',
+      id: 2,
       name: 'Michael Williams',
       avatar: 'https://i.pravatar.cc/300?img=2',
       amount: '43',
     },
     {
-      id: '3',
+      id: 3,
       name: 'Jacqueline Payne',
       avatar: 'https://i.pravatar.cc/300?img=3',
       amount: '73,3',

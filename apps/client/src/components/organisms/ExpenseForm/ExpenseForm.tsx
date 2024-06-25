@@ -10,12 +10,12 @@ import ExpenseItem from 'components/molecules/ExpenseItem/ExpenseItem';
 import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
 import { useBillContext } from 'contexts/BillContext';
 import { amountToNumber, formatAmount } from 'utils';
-import type { IPayers } from 'interfaces';
 import { RouteEnum } from 'enums';
 import useAuthContext from 'hooks/useAuthContext';
+import type { IPayer } from '@repo/types';
 
 interface IFormValues {
-  payers: IPayers[];
+  payers: IPayer[];
 }
 
 const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
@@ -28,9 +28,9 @@ const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
           .matches(/^([0-9]{1,}([,.][0-9]{1,2})?)?$/, 'Wprowadź poprawną kwotę')
           .required(),
         splitsReceipt: yup.boolean().required(),
-        id: yup.string().required(),
+        id: yup.number().required(),
         name: yup.string().required(),
-        avatar: yup.string().required(),
+        avatar: yup.string(),
       }),
     )
     .required(),
@@ -41,7 +41,7 @@ function ExpenseForm(): ReactElement {
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
-  const payersList: IPayers[] = payers.map((payer) => ({
+  const payersList: IPayer[] = payers.map((payer) => ({
     ...payer,
   }));
 
@@ -64,7 +64,7 @@ function ExpenseForm(): ReactElement {
     keyName: 'key',
   });
 
-  const formatData = (formPayers: IPayers[]): IPayers[] =>
+  const formatData = (formPayers: IPayer[]): IPayer[] =>
     formPayers.map((payer) => {
       payer.amount = formatAmount(payer.amount);
       return payer;
@@ -81,7 +81,7 @@ function ExpenseForm(): ReactElement {
     return true;
   };
 
-  const countTotalAmount = (formPayers: IPayers[]) => {
+  const countTotalAmount = (formPayers: IPayer[]) => {
     return formPayers
       .reduce((partialSum, payer) => {
         const numberAmount = amountToNumber(payer.amount);
@@ -90,7 +90,7 @@ function ExpenseForm(): ReactElement {
       .toFixed(2);
   };
 
-  const checkTotalAmount = (formPayers: IPayers[]) => {
+  const checkTotalAmount = (formPayers: IPayer[]) => {
     const totalAmount = countTotalAmount(formPayers);
 
     if (amountToNumber(totalAmount) > amountToNumber(amount)) {
@@ -118,10 +118,7 @@ function ExpenseForm(): ReactElement {
       return;
     }
 
-    const formatted = formatData(data.payers);
-
-    console.log('data', data);
-    console.log('data', formatted);
+    console.log('data.payers', data.payers);
     // TODO Send to API
   };
 
@@ -181,15 +178,12 @@ function ExpenseForm(): ReactElement {
             {countTotalAmount(fields)} PLN
           </Typography>
         </Typography>
-        {fields.find(({ id }) => id === user?.id)?.amount ? (
-          <Button onClick={handleSplitBill} variant="outlined">
-            Podziel rachunek między osoby
-          </Button>
-        ) : (
-          <Button type="submit" variant="contained">
-            Wyślij
-          </Button>
-        )}
+        <Button onClick={handleSplitBill} variant="outlined">
+          Podziel rachunek między osoby
+        </Button>
+        <Button type="submit" variant="contained">
+          Wyślij
+        </Button>
       </Stack>
     </Box>
   );

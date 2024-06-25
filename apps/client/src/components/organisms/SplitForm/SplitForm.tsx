@@ -12,7 +12,7 @@ import {
   Checkbox,
 } from '@mui/material';
 import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
-import type { IPayers } from 'interfaces';
+import type { IPayer } from '@repo/types';
 import { amountToNumber, countSplitAmount } from 'utils';
 import { useBillContext } from 'contexts/BillContext';
 
@@ -21,7 +21,7 @@ function SplitForm(): ReactElement {
   const splitParticipants = payers.filter((payer) => payer.splitsReceipt);
   const splitAmount = amountToNumber(countSplitAmount(amount, payers));
 
-  const countPayerSplitAmount = (payer: IPayers) => {
+  const countPayerSplitAmount = (payer: IPayer) => {
     const payerAmount = amountToNumber(payer.amount || '0');
     if (!splitParticipants.length) return payer.amount || '0';
     const devidedAmount = splitAmount / splitParticipants.length;

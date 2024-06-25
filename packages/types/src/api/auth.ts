@@ -11,7 +11,7 @@ export interface ISignUpRequestData {
 }
 
 export interface IUserResponseData {
-  id: string;
+  id: number;
   name: string;
   surname: string;
   email: string;

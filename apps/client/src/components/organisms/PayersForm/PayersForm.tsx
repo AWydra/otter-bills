@@ -13,99 +13,71 @@ import {
   Avatar,
   Paper,
 } from '@mui/material';
-import type { IPayers } from 'interfaces';
+import type { IPayer } from '@repo/types';
 import { RouteEnum } from 'enums';
 import { useBillContext } from 'contexts/BillContext';
 
-const data: IPayers[] = [
+const data: IPayer[] = [
   {
-    id: '1',
+    id: 1,
     name: 'Kyle Hicks',
     avatar: 'https://i.pravatar.cc/300?img=1',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '2',
+    id: 2,
     name: 'Michael Williams',
     avatar: 'https://i.pravatar.cc/300?img=2',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '3',
+    id: 3,
     name: 'Jacqueline Payne',
     avatar: 'https://i.pravatar.cc/300?img=3',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '4',
+    id: 4,
     name: 'Ronald Nelson',
     avatar: 'https://i.pravatar.cc/300?img=4',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '5',
+    id: 5,
     name: 'Michael Watkins',
     avatar: 'https://i.pravatar.cc/300?img=5',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '6',
+    id: 6,
     name: 'Kristie Rangel',
     avatar: 'https://i.pravatar.cc/300?img=6',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '7',
+    id: 7,
     name: 'Stephanie Nelson',
     avatar: 'https://i.pravatar.cc/300?img=7',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '8',
+    id: 8,
     name: 'Nicole Doyle',
     avatar: 'https://i.pravatar.cc/300?img=8',
     amount: '',
     splitsReceipt: false,
   },
   {
-    id: '9',
+    id: 9,
     name: 'Gerald Snyder',
     avatar: 'https://i.pravatar.cc/300?img=9',
-    amount: '',
-    splitsReceipt: false,
-  },
-  {
-    id: '10',
-    name: 'Shane Weiss',
-    avatar: 'https://i.pravatar.cc/300?img=10',
-    amount: '',
-    splitsReceipt: false,
-  },
-  {
-    id: '11',
-    name: 'Nicole Doyle',
-    avatar: 'https://i.pravatar.cc/300?img=11',
-    amount: '',
-    splitsReceipt: false,
-  },
-  {
-    id: '12',
-    name: 'Gerald Snyder',
-    avatar: 'https://i.pravatar.cc/300?img=12',
-    amount: '',
-    splitsReceipt: false,
-  },
-  {
-    id: '13',
-    name: 'Shane Weiss',
-    avatar: 'https://i.pravatar.cc/300?img=13',
     amount: '',
     splitsReceipt: false,
   },
@@ -113,16 +85,16 @@ const data: IPayers[] = [
 
 function PayersForm(): ReactElement {
   const { payers, setPayers } = useBillContext();
-  const [checked, setChecked] = useState<IPayers[]>(payers);
+  const [checked, setChecked] = useState<IPayer[]>(payers);
   const navigate = useNavigate();
 
-  const handleToggle = (payer: IPayers) => {
-    const isInArray = checked.some((el: IPayers) => el.id === payer.id);
+  const handleToggle = (payer: IPayer) => {
+    const isInArray = checked.some((el: IPayer) => el.id === payer.id);
 
     if (isInArray) {
       setChecked((prevState) => prevState.filter((el) => el.id !== payer.id));
     } else {
-      setChecked((prevState) => [...prevState, payer]);
+      setChecked((prevState) => [...prevState, payer].sort((a, b) => a.id - b.id));
     }
   };
 
@@ -150,7 +122,7 @@ function PayersForm(): ReactElement {
               secondaryAction={
                 <Checkbox
                   edge="end"
-                  inputProps={{ 'aria-labelledby': id }}
+                  inputProps={{ 'aria-labelledby': String(id) }}
                   checked={checked.some((el) => el.id === id)}
                 />
               }
@@ -160,7 +132,7 @@ function PayersForm(): ReactElement {
                 <ListItemAvatar>
                   <Avatar alt={name} src={avatar} />
                 </ListItemAvatar>
-                <ListItemText id={id} primary={name} />
+                <ListItemText id={String(id)} primary={name} />
               </ListItemButton>
             </ListItem>
           );

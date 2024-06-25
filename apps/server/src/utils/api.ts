@@ -3,7 +3,7 @@ import type { IUserModel } from 'types/models';
 import type { IUserResponseData } from '@repo/types';
 
 export const returnUser = (user: IUserModel): IUserResponseData => ({
-  id: String(user.id),
+  id: user.id,
   name: user.name,
   surname: user.surname,
   email: user.email,
