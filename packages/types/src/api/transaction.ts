@@ -4,11 +4,11 @@ export interface IPayer {
   id: number;
   name: string;
   avatar?: string;
-  amount: string;
+  amount?: string;
   splitsReceipt: boolean;
 }
 
-export interface ICreateBillRequestData {
+export interface ICreateTransactionRequestData {
   shop: IStore;
   amount: string;
   date: string;

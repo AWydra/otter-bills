@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { IStoreReponse } from '@repo/types';
+import type { IStoreResponseData } from '@repo/types';
 import useApi from '../hooks/useApi';
 
 export const useStoreServices = () => {
@@ -9,7 +9,7 @@ export const useStoreServices = () => {
   const getStores = async () => {
     try {
       setLoading(true);
-      return await apiClient.get<IStoreReponse>('/stores');
+      return await apiClient.get<IStoreResponseData>('/stores');
     } finally {
       setLoading(false);
     }

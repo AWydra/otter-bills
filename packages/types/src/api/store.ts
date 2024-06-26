@@ -3,6 +3,6 @@ export interface IStore {
   name: string;
 }
 
-export interface IStoreReponse {
+export interface IStoreResponseData {
   stores: IStore[];
 }

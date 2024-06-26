@@ -1,10 +1,10 @@
-export const formatAmount = (amount: string) => {
-  if (amount === '') return amount;
-  const hasComma = amount.includes(',');
+export const formatAmount = (amount?: string) => {
+  if (!amount) return amount;
   const number = Number(amount.replace(',', '.'));
   const formatted = number.toFixed(2);
 
-  return hasComma ? formatted.replace('.', ',') : formatted;
+  return formatted;
 };
 
-export const amountToNumber = (amount: string) => Number(amount.replace(',', '.'));
+export const amountToNumber = (amount?: string) =>
+  Number(typeof amount === 'string' ? amount.replace(',', '.') : 0);

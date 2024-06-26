@@ -4,7 +4,7 @@ import type { ImageListType } from 'react-images-uploading';
 import dayjs from 'dayjs';
 import type { IShopOption } from 'interfaces';
 import useAuthContext from 'hooks/useAuthContext';
-import type { ICreateBillRequestData, IPayer } from '@repo/types';
+import type { ICreateTransactionRequestData, IPayer } from '@repo/types';
 
 interface IReceiptSplit {
   id: number;
@@ -25,7 +25,7 @@ interface IBillContext {
   payers: IPayer[];
   setPayers: (payers: IPayer[]) => void;
   splitReceipt: (splits: IReceiptSplit) => void;
-  generateBillData: () => ICreateBillRequestData;
+  generateBillData: () => ICreateTransactionRequestData;
 }
 
 const contextError = () => {
@@ -84,7 +84,7 @@ export function BillContextProvider({ children }: IProps) {
     setPayers([currentUser]);
   }, [user]);
 
-  const generateBillData = (): ICreateBillRequestData => ({
+  const generateBillData = (): ICreateTransactionRequestData => ({
     shop,
     amount,
     date,
