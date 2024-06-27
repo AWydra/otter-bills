@@ -15,9 +15,17 @@ import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
 import type { IPayer } from '@repo/types';
 import { amountToNumber, countSplitAmount } from 'utils';
 import { useBillContext } from 'contexts/BillContext';
+import { useTransactionServices } from 'services/useTransactionServices';
+import useToastContext from 'hooks/useToastContext';
+import { RouteEnum } from 'enums';
+import { useNavigate } from 'react-router-dom';
 
 function SplitForm(): ReactElement {
-  const { amount, payers, splitReceipt } = useBillContext();
+  const { amount, payers, splitReceipt, generateBillData } = useBillContext();
+  const { createTransaction } = useTransactionServices();
+  const toast = useToastContext();
+  const navigate = useNavigate();
+
   const splitParticipants = payers.filter((payer) => payer.splitsReceipt);
   const splitAmount = amountToNumber(countSplitAmount(amount, payers));
 
@@ -28,9 +36,16 @@ function SplitForm(): ReactElement {
     return payer.splitsReceipt ? (payerAmount + devidedAmount).toFixed(2) : payer.amount || '0';
   };
 
-  const handleClick = () => {
-    // TODO Send to API
-    console.log(payers);
+  const handleClick = async () => {
+    const dataToSend = generateBillData();
+
+    try {
+      await createTransaction(dataToSend);
+      toast.success('Transakcja została dodana');
+      navigate(RouteEnum.HOME);
+    } catch (error) {
+      toast.error('Wystąpił błąd podczas dodawania transakcji');
+    }
   };
 
   return (
@@ -74,7 +89,12 @@ function SplitForm(): ReactElement {
           );
         })}
       </List>
-      <Button sx={{ mt: 2 }} onClick={handleClick} variant="contained">
+      <Button
+        sx={{ mt: 2 }}
+        onClick={handleClick}
+        variant="contained"
+        disabled={!splitParticipants.length}
+      >
         Wyślij
       </Button>
     </Box>

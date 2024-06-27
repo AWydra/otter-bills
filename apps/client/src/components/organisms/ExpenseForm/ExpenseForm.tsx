@@ -11,8 +11,9 @@ import ReceiptSummary from 'components/molecules/ReceiptSummary/ReceiptSummary';
 import { useBillContext } from 'contexts/BillContext';
 import { amountToNumber, formatAmount } from 'utils';
 import { RouteEnum } from 'enums';
-import useAuthContext from 'hooks/useAuthContext';
 import type { IPayer } from '@repo/types';
+import { useTransactionServices } from 'services/useTransactionServices';
+import useToastContext from 'hooks/useToastContext';
 
 interface IFormValues {
   payers: IPayer[];
@@ -23,10 +24,7 @@ const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
     .array()
     .of(
       yup.object().shape({
-        amount: yup
-          .string()
-          .matches(/^([0-9]{1,}([,.][0-9]{1,2})?)?$/, 'Wprowadź poprawną kwotę')
-          .required(),
+        amount: yup.string().matches(/^([0-9]{1,}([,.][0-9]{1,2})?)?$/, 'Wprowadź poprawną kwotę'),
         splitsReceipt: yup.boolean().required(),
         id: yup.number().required(),
         name: yup.string().required(),
@@ -37,9 +35,10 @@ const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
 });
 
 function ExpenseForm(): ReactElement {
-  const { payers, setPayers, amount } = useBillContext();
-  const { user } = useAuthContext();
+  const { payers, setPayers, amount, generateBillData } = useBillContext();
+  const { createTransaction } = useTransactionServices();
   const navigate = useNavigate();
+  const toast = useToastContext();
 
   const payersList: IPayer[] = payers.map((payer) => ({
     ...payer,
@@ -56,17 +55,16 @@ function ExpenseForm(): ReactElement {
     },
   });
 
-  console.log('errors', errors);
-
   const { fields, update } = useFieldArray({
     control,
     name: 'payers',
     keyName: 'key',
   });
 
-  const formatData = (formPayers: IPayer[]): IPayer[] =>
+  const formatData = (formPayers: IPayer[], resetSplit?: boolean): IPayer[] =>
     formPayers.map((payer) => {
       payer.amount = formatAmount(payer.amount);
+      payer.splitsReceipt = resetSplit ? false : payer.splitsReceipt;
       return payer;
     });
 
@@ -109,17 +107,24 @@ function ExpenseForm(): ReactElement {
     navigate(`${RouteEnum.ADD_RECEIPT}/4`);
   };
 
-  const onSubmit: SubmitHandler<IFormValues> = (data) => {
-    console.log('data', data);
+  const onSubmit: SubmitHandler<IFormValues> = async (data) => {
     const isTotalAmountValid = checkTotalAmount(data.payers);
 
     if (!isTotalAmountValid) {
-      console.error('Total amount is invalid');
+      toast.error('Suma kwot przekracza kwotę rachunku');
       return;
     }
 
-    console.log('data.payers', data.payers);
-    // TODO Send to API
+    const dataToSend = generateBillData();
+    dataToSend.payers = formatData(data.payers, true);
+
+    try {
+      await createTransaction(dataToSend);
+      toast.success('Transakcja została dodana');
+      navigate(RouteEnum.HOME);
+    } catch (error) {
+      toast.error('Wystąpił błąd podczas dodawania transakcji');
+    }
   };
 
   return (
@@ -160,6 +165,7 @@ function ExpenseForm(): ReactElement {
                       }
                     }}
                     value={field.value || ''}
+                    error={Boolean(errors.payers?.[index]?.amount?.message)}
                   />
                 );
               }}
@@ -178,10 +184,10 @@ function ExpenseForm(): ReactElement {
             {countTotalAmount(fields)} PLN
           </Typography>
         </Typography>
-        <Button onClick={handleSplitBill} variant="outlined">
+        <Button onClick={handleSplitBill} variant="outlined" disabled={!checkTotalAmount(fields)}>
           Podziel rachunek między osoby
         </Button>
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" disabled={!checkTotalAmount(fields)}>
           Wyślij
         </Button>
       </Stack>
