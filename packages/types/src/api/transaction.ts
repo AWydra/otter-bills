@@ -8,6 +8,15 @@ export interface IPayer {
   splitsReceipt: boolean;
 }
 
+export interface IParticipant {
+  id: number;
+  name: string;
+  avatar?: string;
+  ownAmount: string;
+  splitsReceipt: boolean;
+  totalAmount: string;
+}
+
 export interface ICreateTransactionRequestData {
   shop: IStore;
   amount: string;
@@ -15,4 +24,18 @@ export interface ICreateTransactionRequestData {
   description: string;
   image: File;
   payers: IPayer[];
+}
+
+export interface ITransaction {
+  id: number;
+  totalAmount: string;
+  purchaseDate: string;
+  storeName: string;
+  photo: string;
+  description: string;
+}
+
+export interface IGetTransactionResponse {
+  transaction: ITransaction;
+  participants: IParticipant[];
 }
