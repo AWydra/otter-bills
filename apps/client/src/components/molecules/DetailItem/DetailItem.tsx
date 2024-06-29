@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import type { ReactElement } from 'react';
 import React from 'react';
 
@@ -7,9 +7,16 @@ interface IProps {
   title: string;
   content?: string;
   block?: boolean;
+  loading?: boolean;
 }
 
-function DetailItem({ icon, title, content, block = false }: IProps): ReactElement | null {
+function DetailItem({
+  icon,
+  title,
+  content,
+  block = false,
+  loading = false,
+}: IProps): ReactElement | null {
   if (!content) return null;
 
   return (
@@ -45,7 +52,11 @@ function DetailItem({ icon, title, content, block = false }: IProps): ReactEleme
         }}
         color={`text.${block ? 'secondary' : 'primary'}`}
       >
-        {content}
+        {loading ? (
+          <Skeleton variant="text" sx={{ minWidth: (theme) => theme.spacing(10) }} />
+        ) : (
+          content
+        )}
       </Typography>
     </Box>
   );

@@ -7,15 +7,37 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Skeleton,
   Typography,
 } from '@mui/material';
-import type { IExpenseDetails } from 'interfaces';
+import type { IParticipant } from '@repo/types';
 
 interface IProps {
-  payers: IExpenseDetails[];
+  payers?: IParticipant[];
+  loading?: boolean;
 }
 
-function BillSplitList({ payers }: IProps): ReactElement {
+const renderLoadingItems = () =>
+  [...Array<null>(3).fill(null)].map((_, index) => (
+    <ListItem
+      // eslint-disable-next-line react/no-array-index-key
+      key={index}
+      secondaryAction={
+        <Typography>
+          <Skeleton variant="text" sx={{ width: 40, display: 'inline-block' }} /> PLN
+        </Typography>
+      }
+    >
+      <ListItemAvatar>
+        <Skeleton variant="circular" width={40} height={40} />
+      </ListItemAvatar>
+      <ListItemText
+        primary={<Skeleton variant="text" sx={{ width: 80, display: 'inline-block' }} />}
+      />
+    </ListItem>
+  ));
+
+function BillSplitList({ payers = [], loading = false }: IProps): ReactElement {
   return (
     <>
       <Box
@@ -27,16 +49,23 @@ function BillSplitList({ payers }: IProps): ReactElement {
         <Typography variant="h6">Podział rachunku</Typography>
       </Box>
       <List dense sx={{ width: '100%' }}>
-        {payers.map((payer) => {
-          return (
-            <ListItem key={payer.id} secondaryAction={<Typography>{payer.amount} PLN</Typography>}>
-              <ListItemAvatar>
-                <Avatar alt={payer.name} src={payer.avatar} />
-              </ListItemAvatar>
-              <ListItemText primary={payer.name} />
-            </ListItem>
-          );
-        })}
+        {loading
+          ? renderLoadingItems()
+          : payers.map((payer) => {
+              const fullName = `${payer.name} ${payer.surname}`;
+
+              return (
+                <ListItem
+                  key={payer.id}
+                  secondaryAction={<Typography>{payer.total_amount} PLN</Typography>}
+                >
+                  <ListItemAvatar>
+                    <Avatar alt={fullName} src={payer.avatar} />
+                  </ListItemAvatar>
+                  <ListItemText primary={fullName} />
+                </ListItem>
+              );
+            })}
       </List>
     </>
   );
