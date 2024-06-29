@@ -35,7 +35,7 @@ const schema: yup.ObjectSchema<IFormValues> = yup.object().shape({
 });
 
 function ExpenseForm(): ReactElement {
-  const { payers, setPayers, amount, generateBillData } = useBillContext();
+  const { payers, setPayers, amount, generateBillData, resetValues } = useBillContext();
   const { createTransaction } = useTransactionServices();
   const navigate = useNavigate();
   const toast = useToastContext();
@@ -121,6 +121,7 @@ function ExpenseForm(): ReactElement {
     try {
       await createTransaction(dataToSend);
       toast.success('Transakcja została dodana');
+      resetValues();
       navigate(RouteEnum.HOME);
     } catch (error) {
       toast.error('Wystąpił błąd podczas dodawania transakcji');

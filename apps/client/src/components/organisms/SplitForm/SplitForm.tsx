@@ -21,7 +21,7 @@ import { RouteEnum } from 'enums';
 import { useNavigate } from 'react-router-dom';
 
 function SplitForm(): ReactElement {
-  const { amount, payers, splitReceipt, generateBillData } = useBillContext();
+  const { amount, payers, splitReceipt, generateBillData, resetValues } = useBillContext();
   const { createTransaction } = useTransactionServices();
   const toast = useToastContext();
   const navigate = useNavigate();
@@ -42,6 +42,7 @@ function SplitForm(): ReactElement {
     try {
       await createTransaction(dataToSend);
       toast.success('Transakcja została dodana');
+      resetValues();
       navigate(RouteEnum.HOME);
     } catch (error) {
       toast.error('Wystąpił błąd podczas dodawania transakcji');

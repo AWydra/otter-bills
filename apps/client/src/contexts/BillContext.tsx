@@ -26,6 +26,7 @@ interface IBillContext {
   setPayers: (payers: IPayer[]) => void;
   splitReceipt: (splits: IReceiptSplit) => void;
   generateBillData: () => ICreateTransactionRequestData;
+  resetValues: () => void;
 }
 
 const contextError = () => {
@@ -50,6 +51,7 @@ const defaultValues: IBillContext = {
   setPayers: contextError,
   splitReceipt: contextError,
   generateBillData: contextError,
+  resetValues: contextError,
 };
 
 export const BillContext = createContext<IBillContext>(defaultValues);
@@ -70,18 +72,30 @@ export function BillContextProvider({ children }: IProps) {
 
   const { user } = useAuthContext();
 
+  const resetValues = () => {
+    setShop(defaultValues.shop);
+    setAmount(defaultValues.amount);
+    setDate(defaultValues.date);
+    setDescription(defaultValues.description);
+    setImages(defaultValues.images);
+
+    if (!user) {
+      setPayers(defaultValues.payers);
+    } else {
+      const currentUser: IPayer = {
+        id: user.id,
+        name: `${user.name} ${user.surname}`,
+        avatar: '',
+        amount: '',
+        splitsReceipt: false,
+      };
+
+      setPayers([currentUser]);
+    }
+  };
+
   useEffect(() => {
-    if (!user) return;
-
-    const currentUser: IPayer = {
-      id: user.id,
-      name: `${user.name} ${user.surname}`,
-      avatar: '',
-      amount: '',
-      splitsReceipt: false,
-    };
-
-    setPayers([currentUser]);
+    resetValues();
   }, [user]);
 
   const generateBillData = (): ICreateTransactionRequestData => ({
@@ -118,6 +132,7 @@ export function BillContextProvider({ children }: IProps) {
           setPayers(modifiedPayers);
         },
         generateBillData,
+        resetValues,
       }}
     >
       {children}
