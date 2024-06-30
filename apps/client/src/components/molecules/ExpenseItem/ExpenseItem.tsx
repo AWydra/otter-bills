@@ -1,7 +1,6 @@
 import type { ReactElement } from 'react';
 import React, { useState } from 'react';
 import {
-  Avatar,
   Box,
   Input,
   InputAdornment,
@@ -14,6 +13,7 @@ import {
 import CalculateIcon from '@mui/icons-material/Calculate';
 import AutoWidthInput from 'components/molecules/AutoWidthInput/AutoWidthInput';
 import ExpenseDialog from 'components/organisms/Dialogs/ExpenseDialog/ExpenseDialog';
+import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 
 interface IProps {
   payerName: string;
@@ -50,14 +50,7 @@ function ExpenseItem({
     <>
       <ListItem sx={{ px: 0 }} alignItems="center">
         <ListItemAvatar sx={{ minWidth: (theme) => theme.spacing(6) }}>
-          <Avatar
-            sx={(theme) => ({
-              width: theme.spacing(5),
-              height: theme.spacing(5),
-            })}
-            alt={payerName}
-            src={avatarUrl}
-          />
+          <UserAvatar name={payerName} src={avatarUrl} />
         </ListItemAvatar>
         <ListItemText
           primary={

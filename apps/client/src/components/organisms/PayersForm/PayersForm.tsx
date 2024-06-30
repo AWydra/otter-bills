@@ -10,12 +10,12 @@ import {
   ListItemText,
   ListItemAvatar,
   Checkbox,
-  Avatar,
   Paper,
 } from '@mui/material';
 import type { IPayer } from '@repo/types';
 import { RouteEnum } from 'enums';
 import { useBillContext } from 'contexts/BillContext';
+import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 
 const data: IPayer[] = [
   {
@@ -130,7 +130,7 @@ function PayersForm(): ReactElement {
             >
               <ListItemButton>
                 <ListItemAvatar>
-                  <Avatar alt={name} src={avatar} />
+                  <UserAvatar name={name} src={avatar} />
                 </ListItemAvatar>
                 <ListItemText id={String(id)} primary={name} />
               </ListItemButton>

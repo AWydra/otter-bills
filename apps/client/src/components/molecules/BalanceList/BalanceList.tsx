@@ -6,7 +6,6 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  Avatar,
   ListItemText,
   Typography,
 } from '@mui/material';
@@ -16,6 +15,7 @@ import { balaceCondition } from 'utils/balaceCondition';
 import type { IBalanceResponse } from 'interfaces';
 import type { BalanceListEnum } from 'enums';
 import { RouteEnum } from 'enums';
+import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 
 const data = [
   {
@@ -34,7 +34,7 @@ const data = [
     id: 2,
     name: 'Ktoś inny',
     amount: '41,82',
-    avatar: 'https://i.pravatar.cc/300?img=3',
+    avatar: '',
   },
 ] as IBalanceResponse[];
 
@@ -82,7 +82,7 @@ function BalanceList({ type }: IProps): ReactElement {
             disablePadding
           >
             <ListItemAvatar>
-              <Avatar alt={name} src={avatar} />
+              <UserAvatar name={name} src={avatar} />
             </ListItemAvatar>
             <ListItemText
               id={labelId}

@@ -1,7 +1,6 @@
 import type { ReactElement } from 'react';
 import React from 'react';
 import {
-  Avatar,
   Box,
   List,
   ListItem,
@@ -11,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import type { IParticipant } from '@repo/types';
+import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 
 interface IProps {
   payers?: IParticipant[];
@@ -60,7 +60,7 @@ function BillSplitList({ payers = [], loading = false }: IProps): ReactElement {
                   secondaryAction={<Typography>{payer.total_amount} PLN</Typography>}
                 >
                   <ListItemAvatar>
-                    <Avatar alt={fullName} src={payer.avatar} />
+                    <UserAvatar name={fullName} src={payer.avatar} />
                   </ListItemAvatar>
                   <ListItemText primary={fullName} />
                 </ListItem>

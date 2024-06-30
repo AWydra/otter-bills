@@ -4,7 +4,6 @@ import type { ReactElement } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Avatar,
   AvatarGroup,
   Box,
   Typography,
@@ -13,7 +12,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import type { IHistoryResponse } from 'interfaces';
-import { RouteEnum } from 'enums';
+import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 import styles from './styles';
 
 interface IProps extends IHistoryResponse {
@@ -59,7 +58,8 @@ function HistoryListItem({
                 <AvatarGroup max={4} sx={styles.listItem_avatarGroup}>
                   {/* TODO Remove index as the key */}
                   {avatars.map((avatar, i) => (
-                    <Avatar key={i} src={avatar} />
+                    // TODO add name to the avatar
+                    <UserAvatar key={i} src={avatar} />
                   ))}
                 </AvatarGroup>
               ) : null}

@@ -1,7 +1,6 @@
 import type { ReactElement } from 'react';
 import React from 'react';
 import {
-  Avatar,
   Box,
   Button,
   List,
@@ -19,6 +18,7 @@ import { useTransactionServices } from 'services/useTransactionServices';
 import useToastContext from 'hooks/useToastContext';
 import { RouteEnum } from 'enums';
 import { useNavigate } from 'react-router-dom';
+import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 
 function SplitForm(): ReactElement {
   const { amount, payers, splitReceipt, generateBillData, resetValues } = useBillContext();
@@ -78,7 +78,7 @@ function SplitForm(): ReactElement {
                 }}
               >
                 <ListItemAvatar>
-                  <Avatar alt={payer.name} src={payer.avatar} />
+                  <UserAvatar name={payer.name} src={payer.avatar} />
                 </ListItemAvatar>
                 <ListItemText
                   id={labelId}
