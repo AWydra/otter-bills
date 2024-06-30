@@ -1,4 +1,4 @@
-import type { IGetTransactionResponse, IParticipant, ITransaction } from '@repo/types';
+import type { IGetTransactionResponse, IParticipant, ITransactionDetails } from '@repo/types';
 import sql from 'db';
 import type { Response } from 'express';
 import type { IRequest } from 'types/express';
@@ -8,7 +8,7 @@ import { formatTransactionData } from 'utils/transaction';
 export const getTransaction = async (req: IRequest, res: Response) => {
   const transactionId = req.params.id;
 
-  const [transaction] = await sql<ITransaction[]>`
+  const [details] = await sql<ITransactionDetails[] | undefined[]>`
     SELECT transactions.id, transactions.total_amount, transactions.purchase_date, stores.name as store_name, transactions.photo, transactions.description
     FROM transactions
     JOIN stores ON transactions.store_id = stores.id
@@ -20,18 +20,18 @@ export const getTransaction = async (req: IRequest, res: Response) => {
       )
     )`;
 
-  if (!transaction.id) {
+  if (!details?.id) {
     res.status(404).json({ message: 'Transakcja nie istnieje lub nie masz do niej dostępu' });
     return;
   }
 
   const participants = await sql<IParticipant[]>`
-    SELECT users.id, users.name, users.avatar, transaction_participants.own_amount, transaction_participants.splits_receipt, transaction_participants.total_amount
+    SELECT users.id, users.name, users.surname, users.avatar, transaction_participants.own_amount, transaction_participants.splits_receipt, transaction_participants.total_amount
     FROM transaction_participants
     JOIN users ON transaction_participants.participant_id = users.id
     WHERE transaction_participants.transaction_id = ${Number(transactionId)}`;
 
-  res.status(200).json({ transaction, participants } as IGetTransactionResponse);
+  res.status(200).json({ details, participants } as IGetTransactionResponse);
 };
 
 export const createTransaction = async (req: ICreateTransactionRequest, res: Response) => {

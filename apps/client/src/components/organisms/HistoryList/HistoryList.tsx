@@ -25,7 +25,7 @@ const data = [
     refund: true,
   },
   {
-    id: 2,
+    id: 8,
     label: 'Biedronka',
     amount: 52.39,
     paidBy: 'Ja',

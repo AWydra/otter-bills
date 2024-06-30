@@ -11,10 +11,11 @@ export interface IPayer {
 export interface IParticipant {
   id: number;
   name: string;
+  surname: string;
   avatar?: string;
-  ownAmount: string;
-  splitsReceipt: boolean;
-  totalAmount: string;
+  own_amount: string;
+  splits_receipt: boolean;
+  total_amount: string;
 }
 
 export interface ICreateTransactionRequestData {
@@ -26,16 +27,16 @@ export interface ICreateTransactionRequestData {
   payers: IPayer[];
 }
 
-export interface ITransaction {
+export interface ITransactionDetails {
   id: number;
-  totalAmount: string;
-  purchaseDate: string;
-  storeName: string;
+  total_amount: string;
+  purchase_date: string;
+  store_name: string;
   photo: string;
   description: string;
 }
 
 export interface IGetTransactionResponse {
-  transaction: ITransaction;
+  details: ITransactionDetails;
   participants: IParticipant[];
 }

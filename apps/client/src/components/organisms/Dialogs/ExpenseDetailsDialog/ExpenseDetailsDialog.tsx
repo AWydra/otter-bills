@@ -1,6 +1,6 @@
 import type { ReactElement, Ref } from 'react';
 import React, { useState, forwardRef, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -22,7 +22,10 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import InfoIcon from '@mui/icons-material/Info';
 import BillSplitList from 'components/molecules/BillSplitList/BillSplitList';
 import DetailItem from 'components/molecules/DetailItem/DetailItem';
-import type { IExpenseDetailsResponse } from 'interfaces';
+import { useTransactionServices } from 'services/useTransactionServices';
+import useToastContext from 'hooks/useToastContext';
+import type { IGetTransactionResponse } from '@repo/types';
+import dayjs from 'dayjs';
 
 const Transition = forwardRef(
   (
@@ -35,44 +38,35 @@ const Transition = forwardRef(
 
 Transition.displayName = 'Transition';
 
-const data = {
-  id: 2,
-  image: 'https://www.wykop.pl/cdn/c3201142/comment_IZgatIRmzImVcgne4k04732jU8JqNYvu.jpg',
-  shop: 'Biedronka',
-  amount: '53,92',
-  date: '16.08.2022',
-  additionalInfo:
-    'Tutaj można coś wpisać konkretnego jak np. nazwę sprzętu, dzięki czemu paragon się nie zgubi',
-  payers: [
-    {
-      id: 1,
-      name: 'Kyle Hicks',
-      avatar: 'https://i.pravatar.cc/300?img=1',
-      amount: '12,53',
-    },
-    {
-      id: 2,
-      name: 'Michael Williams',
-      avatar: 'https://i.pravatar.cc/300?img=2',
-      amount: '43',
-    },
-    {
-      id: 3,
-      name: 'Jacqueline Payne',
-      avatar: 'https://i.pravatar.cc/300?img=3',
-      amount: '73,3',
-    },
-  ],
-} as IExpenseDetailsResponse;
-
 function ExpenseDetailsDialog() {
+  const [transaction, setTransaction] = useState<IGetTransactionResponse | null>(null);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [searchParams] = useSearchParams();
+  const { loading, getTransaction } = useTransactionServices();
+  const toast = useToastContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setOpen(Boolean(searchParams.get('itemId')));
+    const getData = async (transactionId: string) => {
+      try {
+        const { data } = await getTransaction(transactionId);
+        setTransaction(data);
+      } catch {
+        toast.error('Transakcja nie istnieje lub nie masz do niej dostępu');
+        handleClose();
+      }
+    };
+
+    const transactionId = searchParams.get('transactionId');
+    setOpen(Boolean(transactionId));
+
+    if (transactionId) {
+      getData(transactionId);
+    } else {
+      // Reset transaction data when dialog is closed
+      setTransaction(null);
+    }
   }, [searchParams]);
 
   const handleClose = () => {
@@ -87,7 +81,7 @@ function ExpenseDetailsDialog() {
             setModalOpen(true);
           }}
           style={{
-            backgroundImage: `url("${data.image}")`,
+            backgroundImage: `url("${import.meta.env.VITE_API_DOMAIN}/bills/${transaction?.details.photo}")`,
             height: 150,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
@@ -110,22 +104,34 @@ function ExpenseDetailsDialog() {
           }}
         >
           <Stack spacing={1} divider={<Divider />}>
-            <DetailItem icon={<StoreIcon />} title="Sklep" content={data.shop} />
+            <DetailItem
+              icon={<StoreIcon />}
+              title="Sklep"
+              content={transaction?.details.store_name}
+              loading={loading}
+            />
             <DetailItem
               icon={<AccountBalanceWalletIcon />}
               title="Kwota"
-              content={`${data.amount} PLN`}
+              content={`${transaction?.details.total_amount} PLN`}
+              loading={loading}
             />
-            <DetailItem icon={<CalendarMonthIcon />} title="Data" content={data.date} />
+            <DetailItem
+              icon={<CalendarMonthIcon />}
+              title="Data"
+              content={dayjs(transaction?.details.purchase_date).format('DD.MM.YYYY')}
+              loading={loading}
+            />
             <DetailItem
               icon={<InfoIcon />}
               title="Dodatkowe informacje"
-              content={data.additionalInfo}
+              content={transaction?.details.description || 'Brak'}
               block
+              loading={loading}
             />
           </Stack>
         </Box>
-        <BillSplitList payers={data.payers} />
+        <BillSplitList loading={loading} payers={transaction?.participants} />
       </Dialog>
       <Modal
         open={modalOpen}
@@ -142,9 +148,11 @@ function ExpenseDetailsDialog() {
           p: 2,
           py: 5,
         }}
-        BackdropProps={{
-          sx: {
-            backgroundColor: 'rgba(0,0,0,0.85)',
+        slotProps={{
+          backdrop: {
+            sx: {
+              backgroundColor: 'rgba(0,0,0,0.85)',
+            },
           },
         }}
       >
@@ -160,7 +168,7 @@ function ExpenseDetailsDialog() {
           </IconButton>
           <Box
             component="img"
-            src={data.image}
+            src={`${import.meta.env.VITE_API_DOMAIN}/bills/${transaction?.details.photo}`}
             alt="Receipt"
             sx={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
           />

@@ -23,13 +23,3 @@ export interface IExpenseDetails {
   avatar: string;
   amount: string;
 }
-
-export interface IExpenseDetailsResponse {
-  id: number;
-  image?: string;
-  shop: string;
-  amount: string;
-  date: string;
-  additionalInfo?: string;
-  payers: IExpenseDetails[];
-}

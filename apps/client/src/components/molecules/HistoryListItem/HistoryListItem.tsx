@@ -35,7 +35,7 @@ function HistoryListItem({
       <ListItemButton
         sx={styles.listItem_button}
         onClick={() => {
-          navigate(`?itemId=${id}`);
+          navigate(`?transactionId=${id}`);
         }}
       >
         <ListItemText
