@@ -48,7 +48,12 @@ function BalanceList({ type }: IProps): ReactElement {
 
   const handlePayment = (payer: IBalanceResponse) => {
     navigate(RouteEnum.PAYMENT, {
-      state: payer,
+      state: {
+        id: payer.id,
+        name: payer.name,
+        amount: payer.amount,
+        avatar: payer.avatar,
+      },
     });
   };
 

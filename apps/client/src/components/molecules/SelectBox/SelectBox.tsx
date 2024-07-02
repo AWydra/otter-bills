@@ -14,9 +14,8 @@ function SelectBox({ icon, label, selected = false, onClick }: IProps): ReactEle
   return (
     <ButtonBase
       sx={(theme) => ({
-        padding: theme.spacing(4, 1, 1),
+        padding: theme.spacing(1),
         display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
         border: '1px solid',
         borderColor: styleCondition(selected, theme.palette.primary.main, theme.palette.grey[600]),
@@ -24,8 +23,8 @@ function SelectBox({ icon, label, selected = false, onClick }: IProps): ReactEle
         backgroundColor: styleCondition(selected, lighten(theme.palette.primary.main, 0.9), ''),
         transition: 'all 0.1s ease-in-out',
         '& svg': {
-          width: theme.spacing(8),
-          height: theme.spacing(8),
+          width: theme.spacing(3),
+          height: theme.spacing(3),
           color: styleCondition(selected, theme.palette.primary.main, theme.palette.grey[400]),
         },
       })}
@@ -35,7 +34,7 @@ function SelectBox({ icon, label, selected = false, onClick }: IProps): ReactEle
       <Typography
         variant="h6"
         sx={(theme) => ({
-          marginTop: theme.spacing(3),
+          marginLeft: theme.spacing(1),
           color: styleCondition(selected, 'inherit', theme.palette.grey[600]),
         })}
       >
