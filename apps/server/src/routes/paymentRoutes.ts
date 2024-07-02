@@ -1,0 +1,8 @@
+import { Router } from 'express';
+import * as paymentController from '../controllers/paymentController';
+
+const router = Router();
+
+router.post('/', paymentController.createPayment);
+
+export default router;
