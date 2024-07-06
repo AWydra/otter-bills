@@ -7,6 +7,7 @@ import authRoutes from 'routes/authRoutes';
 import storeRoutes from 'routes/storeRoutes';
 import transactionRoutes from 'routes/transactionRoutes';
 import paymentRoutes from 'routes/paymentRoutes';
+import historyRoutes from 'routes/historyRoutes';
 import { requireAuth } from 'middleware/authMiddleware';
 
 const app = express();
@@ -31,3 +32,4 @@ app.use(requireAuth);
 app.use('/api/stores', storeRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/history', historyRoutes);
