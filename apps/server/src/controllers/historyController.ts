@@ -1,9 +1,10 @@
+import type { IHistoryPaymentItem, IHistoryTransactionItem } from '@repo/types';
 import sql from 'db';
 import type { Response } from 'express';
 import type { IRequest } from 'types/express';
 
 export const getLatestHistory = async (req: IRequest, res: Response) => {
-  const history = await sql`
+  const history = await sql<(IHistoryTransactionItem | IHistoryPaymentItem)[]>`
   WITH user_transactions AS (
     SELECT 
       t.id,
