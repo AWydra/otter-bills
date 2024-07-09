@@ -1,9 +1,20 @@
-import type { IHistoryPaymentItem, IHistoryTransactionItem } from '@repo/types';
+import type { NextFunction, Response } from 'express';
 import sql from 'db';
-import type { Response } from 'express';
-import type { IRequest } from 'types/express';
+import type { IGetHistoryRequest } from 'types/history';
+import type {
+  IGetHistoryResponseData,
+  IHistoryPaymentItem,
+  IHistoryTransactionItem,
+} from '@repo/types';
 
-export const getLatestHistory = async (req: IRequest, res: Response) => {
+export const aliasLatestHistory = (req: IGetHistoryRequest, res: Response, next: NextFunction) => {
+  req.query = {
+    limit: '4',
+  };
+  next();
+};
+
+export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
   const history = await sql<(IHistoryTransactionItem | IHistoryPaymentItem)[]>`
   WITH user_transactions AS (
     SELECT 
@@ -59,7 +70,7 @@ export const getLatestHistory = async (req: IRequest, res: Response) => {
       p.is_confirmed,
       p.created_at,
       'payment' AS type,
-      NULL::json AS participants  -- No participants for payments
+      NULL::json AS participants
     FROM 
       payments p
     LEFT JOIN 
@@ -73,8 +84,8 @@ export const getLatestHistory = async (req: IRequest, res: Response) => {
   UNION ALL
   SELECT * FROM user_payments
   ORDER BY created_at DESC
-  LIMIT 4
+  LIMIT ${req.query.limit || '10'}
 `;
 
-  res.status(200).json({ items: history });
+  res.status(200).json({ items: history } as IGetHistoryResponseData);
 };

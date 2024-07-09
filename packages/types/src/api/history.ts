@@ -35,6 +35,6 @@ export interface IHistoryPaymentItem {
   participants: null;
 }
 
-export interface IGetLatestHistoryRequestData {
+export interface IGetHistoryResponseData {
   items: (IHistoryTransactionItem | IHistoryPaymentItem)[];
 }
