@@ -21,6 +21,7 @@ export interface IHistoryTransactionItem {
   is_confirmed: null;
   created_at: string;
   type: HistoryItemType.TRANSACTION;
+  store_name: string;
   participants: IHistoryUser[];
 }
 
@@ -33,6 +34,7 @@ export interface IHistoryPaymentItem {
   is_confirmed: boolean;
   created_at: string;
   type: HistoryItemType.PAYMENT;
+  store_name: null;
   participants: null;
 }
 

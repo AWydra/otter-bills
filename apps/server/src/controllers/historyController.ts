@@ -31,6 +31,7 @@ export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
       NULL::boolean AS is_confirmed,
       t.created_at,
       'transaction' AS type,
+      s.name AS store_name,
       COALESCE(
         json_agg(
           json_build_object(
@@ -49,10 +50,12 @@ export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
       users u ON t.payer_id = u.id
     LEFT JOIN 
       users u2 ON tp.participant_id = u2.id
+    LEFT JOIN 
+      stores s ON t.store_id = s.id
     WHERE
       t.payer_id = ${req.userId} OR t.id IN (SELECT transaction_id FROM transaction_participants WHERE participant_id = ${req.userId})
     GROUP BY
-      t.id, u.id, u.name, u.surname, u.avatar, t.total_amount, t.created_at
+      t.id, u.id, u.name, u.surname, u.avatar, t.total_amount, t.created_at, s.name
   ),
   user_payments AS (
     SELECT 
@@ -74,6 +77,7 @@ export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
       p.is_confirmed,
       p.created_at,
       'payment' AS type,
+      NULL::text AS store_name,
       NULL::json AS participants
     FROM 
       payments p
