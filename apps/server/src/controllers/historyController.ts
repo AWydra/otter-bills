@@ -20,6 +20,7 @@ export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
     SELECT 
       t.id,
       json_build_object(
+        'id', u.id,
         'name', u.name,
         'surname', u.surname,
         'avatar', u.avatar
@@ -33,6 +34,7 @@ export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
       COALESCE(
         json_agg(
           json_build_object(
+            'id', u2.id,
             'name', u2.name,
             'surname', u2.surname,
             'avatar', u2.avatar
@@ -50,17 +52,19 @@ export const getHistory = async (req: IGetHistoryRequest, res: Response) => {
     WHERE
       t.payer_id = ${req.userId} OR t.id IN (SELECT transaction_id FROM transaction_participants WHERE participant_id = ${req.userId})
     GROUP BY
-      t.id, u.name, u.surname, u.avatar, t.total_amount, t.created_at
+      t.id, u.id, u.name, u.surname, u.avatar, t.total_amount, t.created_at
   ),
   user_payments AS (
     SELECT 
       p.id,
       json_build_object(
+        'id', up.id,
         'name', up.name,
         'surname', up.surname,
         'avatar', up.avatar
       ) AS payer,
       json_build_object(
+        'id', ur.id,
         'name', ur.name,
         'surname', ur.surname,
         'avatar', ur.avatar

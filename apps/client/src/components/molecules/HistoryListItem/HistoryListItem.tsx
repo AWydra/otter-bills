@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
 import type { ReactElement } from 'react';
 import React from 'react';
@@ -13,10 +12,18 @@ import {
 } from '@mui/material';
 import type { IHistoryResponse } from 'interfaces';
 import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
+import type { IHistoryUser } from '@repo/types';
+import { amountToNumber } from 'utils';
 import styles from './styles';
 
-interface IProps extends IHistoryResponse {
-  preview: boolean;
+interface IProps {
+  id: number;
+  label: string;
+  amount: string;
+  paidBy: IHistoryUser;
+  participants: IHistoryUser[];
+  isCurrentUserPayer: boolean;
+  isPayment?: boolean;
 }
 
 function HistoryListItem({
@@ -24,10 +31,12 @@ function HistoryListItem({
   label,
   amount,
   paidBy,
-  avatars = [],
-  refund,
+  participants,
+  isCurrentUserPayer,
+  isPayment,
 }: IProps): ReactElement {
   const navigate = useNavigate();
+  const numberAmount = amountToNumber(amount);
 
   return (
     <ListItem sx={styles.listItem}>
@@ -44,23 +53,23 @@ function HistoryListItem({
                 {label}
               </Typography>
               <Typography component="span" variant="body1">
-                {Math.abs(amount).toLocaleString('PL-pl', { minimumFractionDigits: 2 })} zł
+                {Math.abs(numberAmount).toLocaleString('PL-pl', { minimumFractionDigits: 2 })} zł
               </Typography>
             </Box>
           }
           secondary={
             <Box sx={styles.listItem_secondary}>
               <Typography component="span" variant="body2" color="text.secondary">
-                {!refund ? 'Zapłacone przez' : amount > 0 ? 'Otrzymane od' : 'Zapłacone dla'}{' '}
-                <b>{paidBy}</b>
+                {/* {!refund ? 'Zapłacone przez' : numberAmount > 0 ? 'Otrzymane od' : 'Zapłacone dla'}{' '} */}
+                {isPayment && isCurrentUserPayer ? 'Zapłacone dla' : 'Otrzymane od'}{' '}
+                <b>{paidBy.name}</b>
               </Typography>
-              {avatars.length ? (
+              {participants.length ? (
                 <AvatarGroup max={4} sx={styles.listItem_avatarGroup}>
-                  {/* TODO Remove index as the key */}
-                  {avatars.map((avatar, i) => (
-                    // TODO add name to the avatar
-                    <UserAvatar key={i} src={avatar} />
-                  ))}
+                  {participants.map((participant, i) => {
+                    const name = `${participant.name} ${participant.surname}`;
+                    return <UserAvatar key={i} src={participant.avatar} name={name} />;
+                  })}
                 </AvatarGroup>
               ) : null}
             </Box>

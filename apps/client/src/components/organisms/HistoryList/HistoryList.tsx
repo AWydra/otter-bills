@@ -1,13 +1,22 @@
 import type { ReactElement } from 'react';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Button, Divider, List } from '@mui/material';
 import HistoryListItem from 'components/molecules/HistoryListItem/HistoryListItem';
 import type { IHistoryResponse } from 'interfaces';
 import { RouteEnum } from 'enums';
+import {
+  HistoryItemType,
+  PaymentMethod,
+  type IHistoryPaymentItem,
+  type IHistoryTransactionItem,
+} from '@repo/types';
+import { useHistoryServices } from 'services/useHistoryServices';
+import useToastContext from 'hooks/useToastContext';
+import useAuthContext from 'hooks/useAuthContext';
 import styles from './styles';
 
-const data = [
+const dataa = [
   {
     id: 0,
     label: 'Zwrot kosztów',
@@ -93,12 +102,52 @@ interface IProps {
 }
 
 function HistoryList({ preview = false }: IProps): ReactElement {
-  const preparedData = preview ? data.slice(0, 4) : data;
+  const preparedData = preview ? dataa.slice(0, 4) : dataa;
+  const [items, setItems] = useState<(IHistoryTransactionItem | IHistoryPaymentItem)[]>([]);
+  const { getLatestHistory } = useHistoryServices();
+  const toast = useToastContext();
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    const fetchLatestHistory = async () => {
+      try {
+        const response = await getLatestHistory();
+        setItems(response.data.items);
+      } catch (error) {
+        toast.error('Błąd podczas pobierania historii transakcji');
+      }
+    };
+
+    fetchLatestHistory();
+  }, []);
 
   return (
     <Box>
       <List sx={styles.list} dense>
-        {preparedData.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
+        {items.map((data, i) => {
+          if (data.type === HistoryItemType.PAYMENT) {
+            const { id, payer, payee, amount, payment_method: paymentMethod } = data;
+
+            const participant = payer.id === user?.id ? payee : payer;
+
+            return (
+              <Fragment key={id}>
+                <HistoryListItem
+                  id={id}
+                  label={`Zwrot kosztów ${paymentMethod === PaymentMethod.CASH ? 'gotówką' : 'przelewem'}`}
+                  amount={amount}
+                  paidBy={participant}
+                  isCurrentUserPayer={payer.id === user?.id}
+                  participants={[participant]}
+                  isPayment
+                />
+                {i < items.length - 1 && <Divider component="li" />}
+              </Fragment>
+            );
+          }
+          return null;
+        })}
+        {/* {preparedData.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
           <Fragment key={id}>
             <HistoryListItem
               id={id}
@@ -111,7 +160,7 @@ function HistoryList({ preview = false }: IProps): ReactElement {
             />
             {i < data.length - 1 && <Divider component="li" />}
           </Fragment>
-        ))}
+        ))} */}
       </List>
       {preview ? (
         <Button

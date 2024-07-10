@@ -6,6 +6,7 @@ export enum HistoryItemType {
 }
 
 export interface IHistoryUser {
+  id: number;
   name: string;
   surname: string;
   avatar: string;
