@@ -10,7 +10,6 @@ import {
   ListItemButton,
   ListItemText,
 } from '@mui/material';
-import type { IHistoryResponse } from 'interfaces';
 import UserAvatar from 'components/atoms/UserAvatar/UserAvatar';
 import type { IHistoryUser } from '@repo/types';
 import { amountToNumber } from 'utils';
@@ -60,9 +59,8 @@ function HistoryListItem({
           secondary={
             <Box sx={styles.listItem_secondary}>
               <Typography component="span" variant="body2" color="text.secondary">
-                {/* {!refund ? 'Zapłacone przez' : numberAmount > 0 ? 'Otrzymane od' : 'Zapłacone dla'}{' '} */}
-                {isPayment && isCurrentUserPayer ? 'Zapłacone dla' : 'Otrzymane od'}{' '}
-                <b>{paidBy.name}</b>
+                {isPayment && isCurrentUserPayer ? 'Zapłacone dla' : isPayment && 'Otrzymane od'}
+                {!isPayment && 'Zapłacone przez'} <b>{paidBy.name}</b>
               </Typography>
               {participants.length ? (
                 <AvatarGroup max={4} sx={styles.listItem_avatarGroup}>

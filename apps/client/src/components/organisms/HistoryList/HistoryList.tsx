@@ -16,93 +16,11 @@ import useToastContext from 'hooks/useToastContext';
 import useAuthContext from 'hooks/useAuthContext';
 import styles from './styles';
 
-const dataa = [
-  {
-    id: 0,
-    label: 'Zwrot kosztów',
-    amount: 20.23,
-    paidBy: 'Maria',
-    avatars: ['https://mui.com/static/images/avatar/3.jpg'],
-    refund: true,
-  },
-  {
-    id: 1,
-    label: 'Zwrot kosztów',
-    amount: -500,
-    paidBy: 'Elżbieta',
-    avatars: ['https://mui.com/static/images/avatar/4.jpg'],
-    refund: true,
-  },
-  {
-    id: 8,
-    label: 'Biedronka',
-    amount: 52.39,
-    paidBy: 'Ja',
-    avatars: [
-      'https://avatars.githubusercontent.com/u/86574268?v=4',
-      'https://mui.com/static/images/avatar/3.jpg',
-      'https://mui.com/static/images/avatar/4.jpg',
-    ],
-    refund: false,
-  },
-  {
-    id: 3,
-    label: 'Lidl',
-    amount: 32.99,
-    paidBy: 'Maria',
-    avatars: [
-      'https://avatars.githubusercontent.com/u/86574268?v=4',
-      'https://mui.com/static/images/avatar/3.jpg',
-    ],
-    refund: false,
-  },
-  {
-    id: 4,
-    label: 'Zwrot kosztów',
-    amount: 20.23,
-    paidBy: 'Maria',
-    avatars: ['https://mui.com/static/images/avatar/5.jpg'],
-    refund: true,
-  },
-  {
-    id: 5,
-    label: 'Zwrot kosztów',
-    amount: -500,
-    paidBy: 'Elżbieta',
-    avatars: ['https://mui.com/static/images/avatar/6.jpg'],
-    refund: true,
-  },
-  {
-    id: 6,
-    label: 'Biedronka',
-    amount: 52.39,
-    paidBy: 'Ja',
-    avatars: [
-      'https://avatars.githubusercontent.com/u/86574268?v=4',
-      'https://mui.com/static/images/avatar/5.jpg',
-      'https://mui.com/static/images/avatar/6.jpg',
-    ],
-    refund: false,
-  },
-  {
-    id: 7,
-    label: 'Lidl',
-    amount: 32.99,
-    paidBy: 'Maria',
-    avatars: [
-      'https://avatars.githubusercontent.com/u/86574268?v=4',
-      'https://mui.com/static/images/avatar/3.jpg',
-    ],
-    refund: false,
-  },
-] as IHistoryResponse[];
-
 interface IProps {
   preview?: boolean;
 }
 
 function HistoryList({ preview = false }: IProps): ReactElement {
-  const preparedData = preview ? dataa.slice(0, 4) : dataa;
   const [items, setItems] = useState<(IHistoryTransactionItem | IHistoryPaymentItem)[]>([]);
   const { getLatestHistory } = useHistoryServices();
   const toast = useToastContext();
@@ -145,6 +63,23 @@ function HistoryList({ preview = false }: IProps): ReactElement {
               </Fragment>
             );
           }
+
+          const { id, payer, amount, participants, store_name: storeName } = data;
+
+          return (
+            <Fragment key={id}>
+              <HistoryListItem
+                id={id}
+                label={storeName}
+                amount={amount}
+                paidBy={payer}
+                isCurrentUserPayer={payer.id === user?.id}
+                participants={participants}
+              />
+              {i < items.length - 1 && <Divider component="li" />}
+            </Fragment>
+          );
+
           return null;
         })}
         {/* {preparedData.map(({ id, label, amount, paidBy, avatars, refund }, i: number) => (
